@@ -1,9 +1,9 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/src/constants/Colors';
+import { useColorScheme } from '@/src/hooks/useColorScheme';
+import { Image, StyleSheet } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -11,27 +11,87 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light']['text-primary'],
         headerShown: false,
-      }}>
+        tabBarStyle: {
+          backgroundColor: Colors.dark['ui-bottombar-background'],
+          paddingBottom: 0,
+          height: 64,
+        },
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name='(discover)'
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          title: '',
+          tabBarIcon: ({ focused }) => (
+            <Image
+              style={styles.logo}
+              source={
+                focused
+                  ? require('../../assets/menu/active-dark-home-filled.png')
+                  : require('../../assets/menu/dark-home-outline.png')
+              }
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name='chat'
         options={{
-          title: 'Explore',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <Image
+              style={styles.logo}
+              source={
+                focused
+                  ? require('../../assets/menu/active-dark-search-filled.png')
+                  : require('../../assets/menu/dark-search-outline.png')
+              }
+            />
+          ),
+        }}
+      />
+      {/* <Tabs.Screen
+        name='discover'
+        options={{
+          title: '',
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require('../../assets/menu/active-dark-calendar-filled.png')
+                  : require('../../assets/menu/dark-calendar-outline.png')
+              }
+            />
+          ),
+        }}
+      /> */}
+      <Tabs.Screen
+        name='profile'
+        options={{
+          title: '',
+
+          tabBarIcon: ({ focused }) => (
+            <Image
+              style={styles.logo}
+              source={
+                focused
+                  ? require('../../assets/menu/active-dark-user-filled.png')
+                  : require('../../assets/menu/dark-user-outline.png')
+              }
+            />
           ),
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  logo: {
+    width: 24,
+    height: 24,
+    objectFit: 'cover',
+  },
+});
