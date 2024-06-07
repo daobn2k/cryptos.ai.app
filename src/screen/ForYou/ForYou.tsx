@@ -4,7 +4,7 @@ import { Blog } from '@/src/utils/blog.utils';
 import { useRequest } from 'ahooks';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useMemo } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, RefreshControl, StyleSheet } from 'react-native';
 import ParallaxScrollView from '@/src/components/ParallaxScrollView';
 import { getBlogFollowings } from '../Trending/serivce';
 import SkeletonDiscover from '@/src/components/SkeletonDiscover';
@@ -42,6 +42,13 @@ export default function Trending() {
         snapToInterval: heightScreen - 250,
         onScroll,
       }}
+      refreshControl={
+        <RefreshControl
+          title='loading'
+          refreshing={loadingBlog}
+          onRefresh={() => run({ page: 1, take: 10 })}
+        />
+      }
     >
       <ThemedView style={styles.container}>
         {formatData?.length > 0 &&
@@ -51,15 +58,12 @@ export default function Trending() {
               <CardDiscover blog={blog} key={`trending` + key + blog.id} />
             );
           })}
-        {loadingBlog && (
-          <>
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-          </>
-        )}
+        {loadingBlog &&
+          Array.from({ length: 10 }).map((_: any, key: number) => (
+            <>
+              <SkeletonDiscover key={'trending-skeleton' + key} />
+            </>
+          ))}
       </ThemedView>
     </ParallaxScrollView>
   );

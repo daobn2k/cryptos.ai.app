@@ -3,14 +3,17 @@ import { ThemedView } from '@/src/components/ThemedView';
 import { Blog } from '@/src/utils/blog.utils';
 import { useRequest } from 'ahooks';
 import { uniqBy } from 'lodash';
-import React, { useEffect, useMemo } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Dimensions, RefreshControl, StyleSheet } from 'react-native';
 import { getBlog } from './serivce';
 import ParallaxScrollView from '@/src/components/ParallaxScrollView';
 import SkeletonDiscover from '@/src/components/SkeletonDiscover';
+import { ThemedText } from '@/src/components/ThemedText';
+import Animated from 'react-native-reanimated';
 const heightScreen = Dimensions.get('window').height;
 
 export default function Trending() {
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {
     data: dataBlog,
     loading: loadingBlog,
@@ -19,7 +22,12 @@ export default function Trending() {
     runAsync,
   } = useRequest(getBlog, {
     manual: true,
-    onSuccess(res) {},
+    onSuccess(res) {
+      setIsRefreshing(false);
+    },
+    onError() {
+      setIsRefreshing(false);
+    },
   });
 
   const formatData: any[] = useMemo(() => {
@@ -30,20 +38,48 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 5 });
+    run({ page: 1, take: 10 });
   }, []);
 
   const onScroll = (event: any) => {};
   return (
-    <ParallaxScrollView
-      setting={{
-        snapToAlignment: 'start',
-        decelerationRate: 0,
-        onScroll,
-        snapToInterval: heightScreen - 284,
-      }}
-    >
-      <ThemedView style={styles.container}>
+    // <ParallaxScrollView
+    //   setting={{
+    //     snapToAlignment: 'start',
+    //     decelerationRate: 0,
+    //     onScroll,
+    //     snapToInterval: heightScreen - 284,
+    //   }}
+    //   refreshControl={
+    //     <RefreshControl
+    //       refreshing={isRefreshing}
+    //       onRefresh={() => {
+    //         setIsRefreshing(true);
+    //         run({ page: 1, take: 10 });
+    //       }}
+    //     />
+    //   }
+    // >
+    <ThemedView style={styles.container}>
+      <Animated.FlatList
+        data={formatData}
+        renderItem={({ item }) => {
+          return <CardDiscover blog={item} />;
+        }}
+        keyExtractor={(item: Blog) => item.id}
+        snapToAlignment='start'
+        decelerationRate={'fast'}
+        snapToInterval={heightScreen - 184}
+      >
+        {isRefreshing && (
+          <ThemedView>
+            <ThemedText type='font-15-500' color='text-primary'>
+              Refreshing
+            </ThemedText>
+          </ThemedView>
+        )}
+
+        {/* <ThemedView style={styles.container}>
         {formatData?.length > 0 &&
           !loadingBlog &&
           formatData.map((blog: Blog, key: number) => {
@@ -51,17 +87,15 @@ export default function Trending() {
               <CardDiscover blog={blog} key={`trending` + key + blog.id} />
             );
           })}
-        {loadingBlog && (
-          <>
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-            <SkeletonDiscover />
-          </>
-        )}
-      </ThemedView>
-    </ParallaxScrollView>
+        {loadingBlog &&
+          Array.from({ length: 10 }).map((_: any, key: number) => (
+            <>
+              <SkeletonDiscover key={'trending-skeleton' + key} />
+            </>
+          ))}
+      </ThemedView> */}
+      </Animated.FlatList>
+    </ThemedView>
   );
 }
 

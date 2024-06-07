@@ -7,7 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { conditionShowTime } from '../utils/fc.untils';
+import { adjustHexColor, conditionShowTime } from '../utils/fc.untils';
+import { getColors } from 'react-native-image-colors';
 
 interface CardViewProps {
   blog: Blog;
@@ -29,21 +30,19 @@ const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
     { light: Colors.light['white-a10'], dark: Colors.dark['white-a10'] },
     'white-a10'
   );
-  // const handleImageLoad = async () => {
-  //   try {
-  //     const result: any = await getColors(data.image_url, {
-  //       fallback: 'rgba(0, 0, 0, 0.9)',
-  //     });
-  //     console.log(result, 'result.dominant');
-
-  //     const color: any = adjustHexColor(result.dominant);
-  //     setColor(color);
-  //   } catch (error) {
-  //     console.error('Error extracting colors:', error);
-  //   }
-  // };
-
-  console.log('rerendering');
+  const handleImageLoad = async () => {
+    try {
+      const result: any = await getColors(data.image_url, {
+        fallback: '#050505',
+        cache: true,
+        key: data.image_url,
+      });
+      const color: any = adjustHexColor(result.detail);
+      setColor(color);
+    } catch (error) {
+      console.error('Error extracting colors:', error);
+    }
+  };
 
   return (
     <LinearGradient
@@ -82,7 +81,7 @@ const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
             height: 327,
             resizeMode: 'contain',
           }}
-          // onLoad={handleImageLoad}
+          onLoad={handleImageLoad}
         />
       </View>
       <View style={styles.main}>
@@ -152,6 +151,7 @@ const ViewAction = ({
 const styles = StyleSheet.create({
   container: {
     borderRadius: 16,
+    marginBottom: 16,
   },
   main: {
     paddingTop: 6,

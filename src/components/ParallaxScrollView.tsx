@@ -8,9 +8,14 @@ type Props = PropsWithChildren<{
   headerImage?: ReactElement;
   headerBackgroundColor?: { dark: string; light: string };
   setting?: any;
+  refreshControl: any;
 }>;
 
-export default function ParallaxScrollView({ children, setting }: Props) {
+export default function ParallaxScrollView({
+  children,
+  setting,
+  refreshControl,
+}: Props) {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
   return (
@@ -18,6 +23,7 @@ export default function ParallaxScrollView({ children, setting }: Props) {
       <Animated.ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}
+        refreshControl={refreshControl}
         {...setting}
       >
         <ThemedView>{children}</ThemedView>
