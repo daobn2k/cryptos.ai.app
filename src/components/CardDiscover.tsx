@@ -43,7 +43,8 @@ const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
   //   }
   // };
 
-  if (!data) return <></>;
+  console.log('rerendering');
+
   return (
     <LinearGradient
       colors={[

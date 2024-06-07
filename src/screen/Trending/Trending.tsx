@@ -7,6 +7,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { getBlog } from './serivce';
 import ParallaxScrollView from '@/src/components/ParallaxScrollView';
+import SkeletonDiscover from '@/src/components/SkeletonDiscover';
 const heightScreen = Dimensions.get('window').height;
 
 export default function Trending() {
@@ -29,17 +30,17 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 20 });
+    run({ page: 1, take: 5 });
   }, []);
 
   const onScroll = (event: any) => {};
   return (
     <ParallaxScrollView
       setting={{
-        snapToStart: true,
+        snapToAlignment: 'start',
         decelerationRate: 0,
-        snapToInterval: heightScreen - 250,
         onScroll,
+        snapToInterval: heightScreen - 284,
       }}
     >
       <ThemedView style={styles.container}>
@@ -50,6 +51,15 @@ export default function Trending() {
               <CardDiscover blog={blog} key={`trending` + key + blog.id} />
             );
           })}
+        {loadingBlog && (
+          <>
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+          </>
+        )}
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -60,5 +70,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     gap: 16,
+    paddingBottom: 80,
   },
 });

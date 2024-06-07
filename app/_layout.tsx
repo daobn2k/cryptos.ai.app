@@ -37,6 +37,10 @@ export default function RootLayout() {
   const bgColor = colorScheme
     ? Colors[colorScheme].background
     : Colors.dark.background;
+  StatusBar.setBarStyle(
+    'light-content'
+    // colorScheme === 'dark' ?   'light-content' : 'dark-content'
+  );
   return (
     <GestureHandlerRootView>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

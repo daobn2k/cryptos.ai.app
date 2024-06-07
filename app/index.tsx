@@ -1,6 +1,5 @@
 import { ThemedText } from '@/src/components/ThemedText';
 import { Colors } from '@/src/constants/Colors';
-import { useColorScheme } from '@/src/hooks/useColorScheme.web';
 import { useThemeColor } from '@/src/hooks/useThemeColor';
 import { ROUTE_PATH } from '@/src/utils/router.utilts';
 import { useRouter } from 'expo-router';
@@ -13,7 +12,6 @@ export default function HomeScreen() {
   const onPress = () => {
     router.push({ pathname: ROUTE_PATH.TRENDING });
   };
-  const theme = useColorScheme();
   const buttonPrimary = useThemeColor(
     {
       light: Colors.light['button-primary'],
@@ -21,8 +19,15 @@ export default function HomeScreen() {
     },
     'button-primary'
   );
+  const background = useThemeColor(
+    {
+      light: Colors.light['background'],
+      dark: Colors.dark['background'],
+    },
+    'background'
+  );
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: background }]}>
       <View style={styles.top}>
         <Image
           source={require('../assets/images/sign-in.gif')}
@@ -67,9 +72,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   top: {
     flex: 1,
-    justifyContent: 'center',
   },
   container: {
+    backgroundColor: '#000',
     alignItems: 'center',
     paddingLeft: 16,
     paddingRight: 16,

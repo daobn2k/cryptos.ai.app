@@ -11,12 +11,15 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: Colors[colorScheme ?? 'light']['text-primary'],
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: Colors.dark['ui-bottombar-background'],
+          backgroundColor: '#00000066',
           paddingBottom: 0,
-          height: 64,
+          height: 56,
+          position: 'absolute',
+          borderTopColor: 'transparent',
         },
       }}
     >
@@ -24,6 +27,7 @@ export default function TabLayout() {
         name='(discover)'
         options={{
           title: '',
+          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Image
               style={styles.logo}
@@ -39,7 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name='chat'
         options={{
-          title: '',
+          tabBarShowLabel: false,
           tabBarIcon: ({ color, focused }) => (
             <Image
               style={styles.logo}
@@ -70,8 +74,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name='profile'
         options={{
-          title: '',
-
+          tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Image
               style={styles.logo}

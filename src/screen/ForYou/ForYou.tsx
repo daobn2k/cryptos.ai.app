@@ -7,6 +7,7 @@ import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import ParallaxScrollView from '@/src/components/ParallaxScrollView';
 import { getBlogFollowings } from '../Trending/serivce';
+import SkeletonDiscover from '@/src/components/SkeletonDiscover';
 const heightScreen = Dimensions.get('window').height;
 
 export default function Trending() {
@@ -50,6 +51,15 @@ export default function Trending() {
               <CardDiscover blog={blog} key={`trending` + key + blog.id} />
             );
           })}
+        {loadingBlog && (
+          <>
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+            <SkeletonDiscover />
+          </>
+        )}
       </ThemedView>
     </ParallaxScrollView>
   );
