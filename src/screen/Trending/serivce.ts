@@ -56,3 +56,16 @@ export const serviceShareBlog = (id: string) => {
     method: 'POST',
   });
 };
+export const updateBlogSaved = (id: string) => {
+  return request({
+    path: API_PATH.MODIFY_BLOG_SAVED(id),
+    method: 'POST',
+  });
+};
+
+export const deleteBlogSaved = (id: string) => {
+  return request({
+    path: API_PATH.MODIFY_BLOG_SAVED(id),
+    method: 'DELETE',
+  });
+};

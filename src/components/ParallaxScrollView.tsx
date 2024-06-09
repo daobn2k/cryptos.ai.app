@@ -8,7 +8,7 @@ type Props = PropsWithChildren<{
   headerImage?: ReactElement;
   headerBackgroundColor?: { dark: string; light: string };
   setting?: any;
-  refreshControl: any;
+  refreshControl?: any;
 }>;
 
 export default function ParallaxScrollView({

@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/material-top-tabs';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
 import { withLayoutContext } from 'expo-router';
+import { View } from 'react-native';
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -36,6 +37,10 @@ const TopTabs = () => {
           backgroundColor: 'white',
           height: 4,
           borderRadius: 9999,
+          position: 'absolute',
+          bottom: 0,
+          width: 32,
+          left: '21%',
         },
       }}
     >
@@ -43,12 +48,14 @@ const TopTabs = () => {
         name='trending'
         options={{
           tabBarLabel: ({ focused }) => (
-            <ThemedText
-              type='font-15-600'
-              color={focused ? 'text-primary' : 'text-tertiary'}
-            >
-              Trending
-            </ThemedText>
+            <View>
+              <ThemedText
+                type='font-15-600'
+                color={focused ? 'text-primary' : 'text-tertiary'}
+              >
+                Trending
+              </ThemedText>
+            </View>
           ),
         }}
       />
@@ -56,12 +63,14 @@ const TopTabs = () => {
         name='index'
         options={{
           tabBarLabel: ({ focused }) => (
-            <ThemedText
-              type='font-15-600'
-              color={focused ? 'text-primary' : 'text-tertiary'}
-            >
-              For you
-            </ThemedText>
+            <View>
+              <ThemedText
+                type='font-15-600'
+                color={focused ? 'text-primary' : 'text-tertiary'}
+              >
+                For you
+              </ThemedText>
+            </View>
           ),
         }}
       />

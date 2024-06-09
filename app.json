@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "cryptoaiapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/logo.png",
-      "resizeMode": "cover",
+      "image": "./assets/images/favicon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#050505"
     },
     "ios": {
@@ -28,7 +28,7 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-image-picker"],
+    "plugins": ["expo-router", "expo-image-picker", "expo-font"],
     "experiments": {
       "typedRoutes": true
     },

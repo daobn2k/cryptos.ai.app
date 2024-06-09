@@ -7,17 +7,33 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { adjustHexColor, conditionShowTime } from '../utils/fc.untils';
-import { getColors } from 'react-native-image-colors';
+import {
+  // adjustHexColor,
+  conditionShowTime,
+  formatNumber,
+} from '../utils/fc.untils';
+import { useSaved } from '../hooks/useSaved';
+import { useReaction } from '../hooks/useReaction';
+import { useShare } from '../hooks/useShare';
+// import { getColors } from 'react-native-image-colors';
 
 interface CardViewProps {
   blog: Blog;
+  updateBlog: (data: Blog, position: number) => void;
+  position: number;
 }
 const screenWidth = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
 
-const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
+const CardDiscover: React.FC<CardViewProps> = ({
+  blog,
+  updateBlog,
+  position,
+}) => {
   const [color, setColor] = useState(null);
+  const { onClickSaved } = useSaved();
+  const { onShare } = useShare();
+  const { onBear, onBull } = useReaction();
   const data = useDataBlog(blog);
   const bgContainer = useThemeColor(
     {
@@ -30,18 +46,31 @@ const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
     { light: Colors.light['white-a10'], dark: Colors.dark['white-a10'] },
     'white-a10'
   );
-  const handleImageLoad = async () => {
-    try {
-      const result: any = await getColors(data.image_url, {
-        fallback: '#050505',
-        cache: true,
-        key: data.image_url,
-      });
-      const color: any = adjustHexColor(result.detail);
-      setColor(color);
-    } catch (error) {
-      console.error('Error extracting colors:', error);
-    }
+  // const handleImageLoad = async () => {
+  //   try {
+  //     const result: any = await getColors(data.image_url, {
+  //       fallback: '#050505',
+  //       cache: true,
+  //       key: data.image_url,
+  //     });
+  //     const color: any = adjustHexColor(result.detail);
+  //     setColor(color);
+  //   } catch (error) {
+  //     console.error('Error extracting colors:', error);
+  //   }
+  // };
+
+  const onPressSaved = () => {
+    onClickSaved(blog, updateBlog, position);
+  };
+  const onPressBull = () => {
+    onBull(blog, updateBlog, position);
+  };
+  const onPressBear = () => {
+    onBear(blog, updateBlog, position);
+  };
+  const onPressShare = () => {
+    onShare(blog, updateBlog, position);
   };
 
   return (
@@ -81,7 +110,7 @@ const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
             height: 327,
             resizeMode: 'contain',
           }}
-          onLoad={handleImageLoad}
+          // onLoad={handleImageLoad}
         />
       </View>
       <View style={styles.main}>
@@ -96,29 +125,66 @@ const CardDiscover: React.FC<CardViewProps> = ({ blog }) => {
         <View style={styles.footer}>
           <View style={[styles.actions, { backgroundColor: bgTouch }]}>
             <ViewAction
-              source={require('@assets/home/home-trade-up.png')}
-              value={data.total_bull}
+              onPress={onPressBull}
+              source={
+                data.reaction === 'BULL'
+                  ? require('@assets/home/active-trade-up.png')
+                  : require('@assets/home/home-trade-up.png')
+              }
+              value={formatNumber(data.total_bull)}
+              style={
+                data.reaction === 'BULL' ? styles.touchActive : styles.touch
+              }
+              textStyle={{
+                color:
+                  data?.reaction === 'BULL'
+                    ? Colors.dark['text-success']
+                    : Colors.dark['white-a80'],
+              }}
             />
             <View style={styles.lineAbsolute}>
               {!data?.reaction && <View style={styles.line} />}
             </View>
             <ViewAction
-              source={require('@assets/home/home-trade-down.png')}
-              value={data.total_bear}
+              onPress={onPressBear}
+              source={
+                data.reaction === 'BEAR'
+                  ? require('@assets/home/active-trade-down.png')
+                  : require('@assets/home/home-trade-down.png')
+              }
+              value={formatNumber(data.total_bear)}
+              style={
+                data.reaction === 'BEAR' ? styles.touchActive : styles.touch
+              }
+              textStyle={{
+                color:
+                  data?.reaction === 'BEAR'
+                    ? Colors.dark['text-danger']
+                    : Colors.dark['white-a80'],
+              }}
             />
           </View>
           <View style={styles.listViews}>
             <ViewAction
               source={require('@assets/home/home-clock.png')}
               value={data.created_at ? conditionShowTime(data.created_at) : ''}
+              style={styles.touchView}
             />
             <ViewAction
               source={require('@assets/home/home-share.png')}
-              value={data.total_shared}
+              value={formatNumber(data.total_shared)}
+              style={styles.touchView}
+              onPress={onPressShare}
             />
             <ViewAction
-              source={require('@assets/home/home-bookmark-outline.png')}
-              value={data.total_saved}
+              onPress={onPressSaved}
+              source={
+                data.is_saved
+                  ? require('@assets/home/active-bookmark-filled.png')
+                  : require('@assets/home/home-bookmark-outline.png')
+              }
+              value={formatNumber(data.total_saved)}
+              style={styles.touchView}
             />
           </View>
         </View>
@@ -133,15 +199,19 @@ const ViewAction = ({
   value,
   source,
   onPress,
+  style,
+  textStyle,
 }: {
   value: string | number;
   source: any;
   onPress?: () => void;
+  style?: any;
+  textStyle?: any;
 }) => {
   return (
-    <TouchableOpacity style={[styles.touch]} onPress={onPress}>
+    <TouchableOpacity style={[styles.touch, style]} onPress={onPress}>
       <Image source={source} style={styles.imageAction} />
-      <ThemedText type='font-12-500' color='white-a80'>
+      <ThemedText type='font-12-500' color='white-a80' style={textStyle}>
         {value}
       </ThemedText>
     </TouchableOpacity>
@@ -187,6 +257,7 @@ const styles = StyleSheet.create({
   imageAction: {
     width: 16,
     height: 16,
+    objectFit: 'contain',
   },
   actions: {
     flexDirection: 'row',
@@ -197,6 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
     position: 'relative',
   },
+
   touch: {
     flexDirection: 'row',
     gap: 4,
@@ -204,13 +276,17 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingLeft: 8,
     paddingRight: 8,
+    borderRadius: 9999,
+  },
+  touchView: {
+    flexDirection: 'row',
+    gap: 4,
+    paddingBottom: 0,
+    paddingTop: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   lineAbsolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -222,7 +298,10 @@ const styles = StyleSheet.create({
   listViews: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
     justifyContent: 'flex-end',
+    gap: 12,
+  },
+  touchActive: {
+    backgroundColor: Colors.dark['white-a100'],
   },
 });

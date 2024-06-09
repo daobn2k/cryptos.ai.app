@@ -16,17 +16,18 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#00000066',
-          paddingBottom: 0,
-          height: 56,
           position: 'absolute',
+          height: 56,
+          alignItems: 'center',
           borderTopColor: 'transparent',
+          bottom: 0,
+          paddingBottom: 0,
         },
       }}
     >
       <Tabs.Screen
         name='(discover)'
         options={{
-          title: '',
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <Image
