@@ -26,13 +26,11 @@ export default async function request(
     responseType,
   } = props;
   let token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYTJjNDRiMS1jZmE3LTQzNmMtOGZhMS0zN2FhYjBjNGFkNmYiLCJpYXQiOjE3MTc1NzIyMzIsImV4cCI6MTcxODE3NzAzMn0.PHozg1XfoTxmHmI0pFnCdz3vRRjS1aTrMaVfUInHmT8';
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YmZhMTliZS1kNDBkLTQ2MTYtYjQyMC02ZmYwNGNlNjMzYzAiLCJpYXQiOjE3MTgwMTY3MTEsImV4cCI6MTcxODYyMTUxMX0.qEwSKq7azc3pClC9rPG4Mmd8fS2PLt_x9GI18YyxWBk";
   // if (localStorage?.getItem('accessToken')) {
   //   token = JSON?.parse(localStorage?.getItem('accessToken') || '');
   // }
   const apiUrl = 'https://cryptos-ai-server-dev.uslab.dev';
-
-  console.log(process.env.REACT_APP_API_URL, 'log');
 
   let url = `${prefix ?? apiUrl}${path}`;
 

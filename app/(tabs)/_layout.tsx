@@ -1,9 +1,9 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Tabs } from "expo-router";
+import React from "react";
 
-import { Colors } from '@/src/constants/Colors';
-import { useColorScheme } from '@/src/hooks/useColorScheme';
-import { Image, StyleSheet } from 'react-native';
+import { Colors } from "@/src/constants/Colors";
+import { useColorScheme } from "@/src/hooks/useColorScheme";
+import { Image, StyleSheet } from "react-native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,21 +12,19 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light']['text-primary'],
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"]["text-primary"],
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#00000066',
-          position: 'absolute',
-          height: 56,
-          alignItems: 'center',
-          borderTopColor: 'transparent',
+          backgroundColor: "#00000066",
+          position: "absolute",
+          alignItems: "center",
+          borderTopColor: "transparent",
           bottom: 0,
-          paddingBottom: 0,
         },
       }}
     >
       <Tabs.Screen
-        name='(discover)'
+        name="(discover)"
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
@@ -34,15 +32,15 @@ export default function TabLayout() {
               style={styles.logo}
               source={
                 focused
-                  ? require('../../assets/menu/active-dark-home-filled.png')
-                  : require('../../assets/menu/dark-home-outline.png')
+                  ? require("../../assets/menu/active-dark-home-filled.png")
+                  : require("../../assets/menu/dark-home-outline.png")
               }
             />
           ),
         }}
       />
       <Tabs.Screen
-        name='chat'
+        name="chat"
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ color, focused }) => (
@@ -50,8 +48,8 @@ export default function TabLayout() {
               style={styles.logo}
               source={
                 focused
-                  ? require('../../assets/menu/active-dark-search-filled.png')
-                  : require('../../assets/menu/dark-search-outline.png')
+                  ? require("../../assets/menu/active-dark-search-filled.png")
+                  : require("../../assets/menu/dark-search-outline.png")
               }
             />
           ),
@@ -73,7 +71,7 @@ export default function TabLayout() {
         }}
       /> */}
       <Tabs.Screen
-        name='profile'
+        name="profile"
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
@@ -81,8 +79,8 @@ export default function TabLayout() {
               style={styles.logo}
               source={
                 focused
-                  ? require('../../assets/menu/active-dark-user-filled.png')
-                  : require('../../assets/menu/dark-user-outline.png')
+                  ? require("../../assets/menu/active-dark-user-filled.png")
+                  : require("../../assets/menu/dark-user-outline.png")
               }
             />
           ),
@@ -96,6 +94,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 24,
     height: 24,
-    objectFit: 'cover',
+    objectFit: "cover",
   },
 });

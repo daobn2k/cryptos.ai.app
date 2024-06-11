@@ -11,11 +11,9 @@ export const useReaction = () => {
   });
   const onBear = (
     item: Blog,
-    callback: (data: Blog, position: number) => void,
-    position: number
+    callback?: (data: Blog, position: any) => void,
+    position?: number
   ) => {
-    console.log(item.reaction);
-
     if (item.reaction === 'BEAR') return;
     const data: Blog = {
       ...item,
@@ -23,16 +21,14 @@ export const useReaction = () => {
       total_bear: item.total_bear + 1,
       total_bull: item.total_bull - 1 >= 0 ? item.total_bull - 1 : 0,
     };
-    callback(data, position);
+    callback  && callback(data, position);
     runBlogsBear(item?.id);
   };
   const onBull = (
     item: Blog,
-    callback: (data: Blog, position: number) => void,
-    position: number
+    callback?: (data: Blog, position: any ) => void,
+    position?: number
   ) => {
-    console.log(item.reaction);
-
     if (item.reaction === 'BULL') return;
 
     const data: Blog = {
@@ -41,7 +37,7 @@ export const useReaction = () => {
       total_bull: item.total_bull + 1,
       total_bear: item.total_bear - 1 >= 0 ? item.total_bear - 1 : 0,
     };
-    callback(data, position);
+    callback  && callback(data, position);
     runBlogsBull(item?.id);
   };
 

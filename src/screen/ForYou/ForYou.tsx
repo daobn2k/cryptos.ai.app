@@ -1,22 +1,22 @@
-import CardDiscover from '@/src/components/CardDiscover';
-import { ThemedView } from '@/src/components/ThemedView';
-import { Blog } from '@/src/utils/blog.utils';
-import { useRequest } from 'ahooks';
-import { uniqBy } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import CardDiscover from "@/src/components/CardDiscover";
+import { ThemedView } from "@/src/components/ThemedView";
+import { Blog } from "@/src/utils/blog.utils";
+import { useRequest } from "ahooks";
+import { uniqBy } from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   RefreshControl,
   StyleSheet,
-} from 'react-native';
-import ParallaxScrollView from '@/src/components/ParallaxScrollView';
-import SkeletonDiscover from '@/src/components/SkeletonDiscover';
-import { ThemedText } from '@/src/components/ThemedText';
-import Animated from 'react-native-reanimated';
-import { View } from 'moti';
-import { getBlogFollowings } from '../Trending/serivce';
-const heightScreen = Dimensions.get('window').height;
+} from "react-native";
+import ParallaxScrollView from "@/src/components/ParallaxScrollView";
+import SkeletonDiscover from "@/src/components/SkeletonDiscover";
+import { ThemedText } from "@/src/components/ThemedText";
+import Animated from "react-native-reanimated";
+import { View } from "moti";
+import { getBlogFollowings } from "../Trending/serivce";
+const heightScreen = Dimensions.get("window").height;
 
 export default function Trending() {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -25,7 +25,6 @@ export default function Trending() {
     loading: loadingBlog,
     run,
     mutate,
-    runAsync,
   } = useRequest(getBlogFollowings, {
     manual: true,
     onSuccess(res) {
@@ -39,7 +38,6 @@ export default function Trending() {
     data: dataLoadMore,
     run: onLoadMore,
     loading: loadingMore,
-    mutate: mutateSearch,
   } = useRequest(getBlogFollowings, {
     manual: true,
     onSuccess: (res) => {
@@ -56,7 +54,7 @@ export default function Trending() {
 
   const formatData: any[] = useMemo(() => {
     if (dataBlog && dataBlog.data?.length > 0) {
-      return uniqBy(dataBlog?.data, 'id');
+      return uniqBy(dataBlog?.data, "id");
     }
     return [];
   }, [dataBlog]);
@@ -89,12 +87,12 @@ export default function Trending() {
   };
   return (
     <ThemedView style={styles.container}>
-      {isRefreshing && <ActivityIndicator color={'white'} />}
+      {isRefreshing && <ActivityIndicator color={"white"} />}
       {loadingBlog && (
         <ParallaxScrollView>
           {Array.from({ length: 10 }).map((_: any, key: number) => (
             <>
-              <SkeletonDiscover key={'trending-skeleton' + key} />
+              <SkeletonDiscover key={"for-you-skeleton" + key} />
             </>
           ))}
         </ParallaxScrollView>
@@ -106,7 +104,7 @@ export default function Trending() {
             return (
               <CardDiscover
                 blog={item}
-                key={item.id + index + 'trending-card'}
+                key={item.id + index + "for-you-card"}
                 position={index}
                 updateBlog={onUpdateBlogs}
               />
@@ -114,8 +112,8 @@ export default function Trending() {
           }}
           refreshing={isRefreshing}
           keyExtractor={(item: Blog) => `${item.id}-for-you`}
-          snapToAlignment='start'
-          decelerationRate={'fast'}
+          snapToAlignment="start"
+          decelerationRate={"fast"}
           snapToInterval={heightScreen - 284}
           onEndReachedThreshold={1}
           onEndReached={() => onNext()}
@@ -130,7 +128,7 @@ export default function Trending() {
         />
       )}
 
-      {loadingMore && <ActivityIndicator color={'white'} />}
+      {loadingMore && <ActivityIndicator color={"white"} />}
     </ThemedView>
   );
 }

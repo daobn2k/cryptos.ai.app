@@ -2,9 +2,9 @@
   "expo": {
     "name": "cryptos.ai",
     "slug": "crypto-ai-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "cryptoaiapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -21,14 +21,21 @@
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#050505"
       },
-      "package": "com.vandao2k.cryptoaiapp"
+      "package": "com.vandao2k.cryptoaiapp",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-image-picker", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-image-picker",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -37,7 +44,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "48429850-d6ec-4576-b44e-54e79b210498"
+        "projectId": "f80c3a3d-5a75-41eb-ba26-df1812f13b34"
       }
     }
   }

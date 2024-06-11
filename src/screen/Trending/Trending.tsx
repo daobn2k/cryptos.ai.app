@@ -1,20 +1,23 @@
-import CardDiscover from '@/src/components/CardDiscover';
-import { ThemedView } from '@/src/components/ThemedView';
-import { Blog } from '@/src/utils/blog.utils';
-import { useRequest } from 'ahooks';
-import { uniqBy } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import CardDiscover from "@/src/components/CardDiscover";
+import { ThemedView } from "@/src/components/ThemedView";
+import { Blog } from "@/src/utils/blog.utils";
+import { useRequest } from "ahooks";
+import { uniqBy } from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   RefreshControl,
   StyleSheet,
-} from 'react-native';
-import Animated from 'react-native-reanimated';
-import { getBlog } from './serivce';
-const heightScreen = Dimensions.get('window').height;
+} from "react-native";
+import Animated from "react-native-reanimated";
+import { getBlog } from "./serivce";
+import ParallaxScrollView from "@/src/components/ParallaxScrollView";
+import SkeletonDiscover from "@/src/components/SkeletonDiscover";
+const heightScreen = Dimensions.get("window").height;
 
 export default function Trending() {
+  const [firstLoading, setFirstLoading] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {
     data: dataBlog,
@@ -25,9 +28,11 @@ export default function Trending() {
     manual: true,
     onSuccess(res) {
       setIsRefreshing(false);
+      setFirstLoading(false);
     },
     onError() {
       setIsRefreshing(false);
+      setFirstLoading(false);
     },
   });
   const {
@@ -50,13 +55,13 @@ export default function Trending() {
 
   const formatData: any[] = useMemo(() => {
     if (dataBlog && dataBlog.data?.length > 0) {
-      return uniqBy(dataBlog?.data, 'id');
+      return uniqBy(dataBlog?.data, "id");
     }
     return [];
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 5 });
   }, []);
 
   const onNext = () => {
@@ -70,7 +75,7 @@ export default function Trending() {
   };
   const onRefresh = () => {
     setIsRefreshing(true);
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 5 });
   };
 
   const onUpdateBlogs = (data: Blog, position: number) => {
@@ -83,8 +88,16 @@ export default function Trending() {
   };
   return (
     <ThemedView style={styles.container}>
-      {isRefreshing && <ActivityIndicator color={'white'} />}
-
+      {isRefreshing && <ActivityIndicator color={"white"} />}
+      {(firstLoading || loadingBlog) && (
+        <ParallaxScrollView>
+          {Array.from({ length: 10 }).map((_: any, key: number) => (
+            <>
+              <SkeletonDiscover key={"trending-skeleton" + key} />
+            </>
+          ))}
+        </ParallaxScrollView>
+      )}
       {!loadingBlog && (
         <Animated.FlatList
           data={formatData}
@@ -92,7 +105,7 @@ export default function Trending() {
             return (
               <CardDiscover
                 blog={item}
-                key={item.id + index + 'trending-card'}
+                key={item.id + index + "trending-card"}
                 position={index}
                 updateBlog={onUpdateBlogs}
               />
@@ -100,8 +113,8 @@ export default function Trending() {
           }}
           refreshing={isRefreshing}
           keyExtractor={(item: Blog) => item.id}
-          snapToAlignment='start'
-          decelerationRate={'fast'}
+          snapToAlignment="start"
+          decelerationRate={"fast"}
           snapToInterval={heightScreen - 284}
           onEndReachedThreshold={2}
           onEndReached={() => onNext()}
@@ -115,7 +128,7 @@ export default function Trending() {
           showsVerticalScrollIndicator={false}
         />
       )}
-      {loadingMore && <ActivityIndicator color={'white'} />}
+      {loadingMore && <ActivityIndicator color={"white"} />}
     </ThemedView>
   );
 }

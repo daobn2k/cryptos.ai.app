@@ -3,26 +3,33 @@ import {
   DefaultTheme,
   NavigationContainer,
   ThemeProvider,
-} from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
 
-import { useColorScheme } from '@/src/hooks/useColorScheme';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { Colors } from '@/src/constants/Colors';
+import { useColorScheme } from "@/src/hooks/useColorScheme";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+} from "react-native";
+import { Colors } from "@/src/constants/Colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    Aspekta: require('../assets/fonts/Aspekta-400.ttf'),
-    'Aspekta-Medium': require('../assets/fonts/Aspekta-500.ttf'),
-    'Aspekta-Bold': require('../assets/fonts/Aspekta-600.ttf'),
+    Aspekta: require("../assets/fonts/Aspekta-400.ttf"),
+    "Aspekta-Medium": require("../assets/fonts/Aspekta-500.ttf"),
+    "Aspekta-Bold": require("../assets/fonts/Aspekta-600.ttf"),
   });
 
   useEffect(() => {
@@ -38,18 +45,32 @@ export default function RootLayout() {
     ? Colors[colorScheme].background
     : Colors.dark.background;
   StatusBar.setBarStyle(
-    'light-content'
+    "light-content"
     // colorScheme === 'dark' ?   'light-content' : 'dark-content'
   );
+  const insets = useSafeAreaInsets();
+
   return (
     <GestureHandlerRootView>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <SafeAreaView style={[styles.container, { backgroundColor: bgColor }]}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: bgColor,
+              paddingTop: insets.top,
+            },
+          ]}
+        >
           <Stack>
-            <Stack.Screen name='index' options={{ headerShown: false }} />
-            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="views/[id]"
+              options={{ headerShown: false, presentation: "modal" }}
+            />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
-        </SafeAreaView>
+        </View>
       </ThemeProvider>
     </GestureHandlerRootView>
   );
@@ -58,7 +79,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    position: 'relative',
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    position: "relative",
   },
 });

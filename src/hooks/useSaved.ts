@@ -10,8 +10,8 @@ export const useSaved = () => {
 
   const onClickSaved = async (
     item: Blog,
-    callback: (data: Blog, position: number) => void,
-    position: number
+    callback?: (data: Blog, position: any) => void,
+    position?: number
   ) => {
     if (!item) {
       return;
@@ -19,14 +19,12 @@ export const useSaved = () => {
 
     if (item.is_saved) {
       //   onOpen({ title: "You’re unsaved thread" });
-      console.log(item.is_saved, 'item.is_saved');
-
       const data: Blog = {
         ...item,
         is_saved: false,
         total_saved: item.total_saved - 1,
       };
-      callback(data, position);
+      callback && callback(data, position);
       await deleteSaved(item.id);
     } else {
       //   onOpen({ title: "You’re saved thread" });
@@ -35,7 +33,7 @@ export const useSaved = () => {
         is_saved: true,
         total_saved: item.total_saved + 1,
       };
-      callback(data, position);
+      callback && callback(data, position);
       await runAsync(item.id);
     }
   };

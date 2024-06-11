@@ -7,8 +7,8 @@ export const useShare = () => {
 
   const onShare = async (
     item: Blog,
-    callback: (data: Blog, position: number) => void,
-    position: number
+    callback?: (data: Blog, position: any) => void,
+    position?: number
   ) => {
     const data: Blog = {
       ...item,
@@ -19,7 +19,7 @@ export const useShare = () => {
     // const lang = localStorageUtils.get("lang");
     // const url = `${process.env.NEXT_PUBLIC_WEB_URL}/${lang || "en"}/view-discover?slug=${item?.slug}`;
     // onCopy(url);
-    callback(data, position);
+    callback && callback(data, position);
   };
 
   return { onShare };
