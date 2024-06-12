@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
 import React from "react";
-
 import { Colors } from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
 import { Image, StyleSheet } from "react-native";
+import { BlurView } from "expo-blur";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -11,11 +11,20 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarBackground: () => (
+          <BlurView
+            intensity={20}
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              backgroundColor: "#00000066",
+            }}
+          />
+        ),
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: Colors[colorScheme ?? "light"]["text-primary"],
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#00000066",
+          // backgroundColor: "#00000066",
           position: "absolute",
           alignItems: "center",
           borderTopColor: "transparent",

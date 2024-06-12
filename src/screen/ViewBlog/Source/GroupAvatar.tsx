@@ -1,26 +1,31 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
+import { ISource } from ".";
 
-export const GroupAvatar = () => {
+export const GroupAvatar: React.FC<ISource> = ({ data }) => {
   return (
     <View style={styles.list}>
-      {[1, 2, 3, 4, 5].map((e, key) => {
-        return (
-          <View
-            style={[styles.item, { marginLeft: -1 * key + 1 }]}
-            key={key + "avatar"}
-          >
-            <Image
-              source={{
-                uri: "https://pbs.twimg.com/profile_images/1366208150211350534/GfAPwpyD.jpg",
-              }}
-              style={styles.avatar}
-            />
-            <View style={styles.stroke} />
-          </View>
-        );
-      })}
+      {data?.length > 0 ? (
+        data.map((e, key) => {
+          return (
+            <View
+              style={[styles.item, { marginLeft: -1 * key + 1 }]}
+              key={e.id + "avatar"}
+            >
+              <Image
+                source={{
+                  uri: e.url,
+                }}
+                style={styles.avatar}
+              />
+              <View style={styles.stroke} />
+            </View>
+          );
+        })
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

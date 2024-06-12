@@ -24,6 +24,7 @@ import {
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import UpdateCheck from "@/src/components/UpdateCheck";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,10 +63,7 @@ export default function RootLayout() {
     // colorScheme === 'dark' ?   'light-content' : 'dark-content'
   );
   const insets = useSafeAreaInsets();
-  const showDownloadButton = isUpdateAvailable;
-  const runTypeMessage = currentlyRunning.isEmbeddedLaunch
-    ? "This app is running from built-in code"
-    : "This app is running an update";
+
   return (
     <GestureHandlerRootView>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -78,14 +76,7 @@ export default function RootLayout() {
             },
           ]}
         >
-          {showDownloadButton ? (
-            <Button
-              onPress={() => Updates.fetchUpdateAsync()}
-              title="Download and run update"
-            />
-          ) : null}
-          <Text>{runTypeMessage}</Text>
-
+          <UpdateCheck />
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen

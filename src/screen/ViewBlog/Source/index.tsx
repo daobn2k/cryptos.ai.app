@@ -1,12 +1,20 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
 import { Colors } from "@/src/constants/Colors";
-import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { Animated, Image, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { GroupAvatar } from "./GroupAvatar";
-
-function Source() {
+import { ItemSource } from "./ItemSource";
+export interface ISource {
+  data: {
+    name: string;
+    url: string;
+    id: string;
+  }[];
+}
+const Source: React.FC<ISource> = ({ data }) => {
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <ThemedView
       style={[styles.root, { backgroundColor: Colors.dark["background-02"] }]}
@@ -30,31 +38,42 @@ function Source() {
               paddingStart: 12,
             }}
           >
-            <GroupAvatar />
+            <GroupAvatar data={data} />
             <TouchableOpacity
               style={{
                 padding: 4,
                 alignItems: "center",
                 justifyContent: "center",
               }}
+              onPress={() => setIsVisible(!isVisible)}
             >
               <Image
                 source={require("@assets/view-blog/ic-down-line.png")}
                 style={{
                   width: 16,
                   height: 16,
-                  transform: [{ rotate: "180deg" }],
+                  transform: [{ rotate: isVisible ? "180deg" : "0deg" }],
                 }}
               />
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.bottom}></View>
+        <Animated.View style={styles.bottom}>
+          {data?.length > 0 &&
+            isVisible &&
+            data.map((source, key) => {
+              return (
+                <ItemSource
+                  data={source}
+                  key={source.id + key + "item-source"}
+                />
+              );
+            })}
+        </Animated.View>
       </ThemedView>
     </ThemedView>
   );
-}
+};
 
 export default Source;
 
@@ -76,19 +95,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  bottom: {},
-  itemBottom: {
-    backgroundColor: "#484848",
-    padding: 16,
-    gap: 16,
-    width: 192,
-    height: 96,
-    borderRadius: 8,
-  },
-  image: {
-    width: 20,
-    height: 20,
-    borderRadius: 100,
-    resizeMode: "center",
+  bottom: {
+    flexDirection: "row",
+    gap: 8,
+    overflow: "scroll",
   },
 });

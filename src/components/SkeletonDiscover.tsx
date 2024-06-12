@@ -12,10 +12,10 @@ const heightScreen = Dimensions.get("window").height;
 const SkeletonDiscover: React.FC = () => {
   const bgContainer = useThemeColor(
     {
-      light: Colors.light["skeleton-from"],
-      dark: Colors.dark["skeleton-from"],
+      light: Colors.light["background-02"],
+      dark: Colors.dark["background-02"],
     },
-    "skeleton-from"
+    "background-02"
   );
   const bgTouch = useThemeColor(
     { light: Colors.light["white-a10"], dark: Colors.dark["white-a10"] },
@@ -31,8 +31,9 @@ const SkeletonDiscover: React.FC = () => {
       style={{
         ...styles.container,
         backgroundColor: bgContainer,
-        maxHeight: heightScreen - 75,
-        minHeight: heightScreen - 75,
+        maxHeight: heightScreen - 300,
+        minHeight: heightScreen - 300,
+        marginBottom: 16,
       }}
     >
       <View style={styles.viewImage}>

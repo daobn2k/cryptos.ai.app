@@ -44,7 +44,7 @@ export default function HomeScreen() {
             Stay up to date with the latest
           </ThemedText>
           <ThemedText type="font-body-md" color="text-tertiary">
-            Crypto news Test
+            Crypto news
           </ThemedText>
         </View>
         <Link

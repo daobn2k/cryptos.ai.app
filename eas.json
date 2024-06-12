@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "version": ">= 0.38.3"
+  },
   "build": {
     "development-simulator": {
       "developmentClient": true,
@@ -20,5 +23,8 @@
     "production": {
       "channel": "production"
     }
+  },
+  "submit": {
+    "production": {}
   }
 }

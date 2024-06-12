@@ -38,22 +38,22 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
     [mutate]
   );
 
-  const { source = [], avatars } = useMemo(() => {
+  const { source = [] } = useMemo(() => {
     if (blog?.cluster?.tweets?.length <= 0)
       return {
         source: [],
-        avatars: [],
       };
 
-    console.log(blog?.cluster?.tweets, "blog?.cluster?.tweets");
-
-    const tweet = uniqBy(blog?.cluster?.tweets, "_id");
+    const tweet = uniqBy(blog?.cluster?.tweets, "twitter_user_id");
     return {
-      source: blog?.cluster?.tweets?.map((tweet: Tweet) => ({
-        name: tweet?.twitter_user?.name,
-        id: tweet?.twitter_user?.id,
-        url: tweet?.media[0]?.media_url_https || "",
-      })),
+      source:
+        tweet?.length > 0
+          ? tweet?.map((tweet: Tweet) => ({
+              name: tweet?.twitter_user?.name,
+              id: tweet?.twitter_user?.id,
+              url: tweet?.media[0]?.media_url_https || "",
+            }))
+          : [],
     };
   }, [blog?.cluster?.tweets]);
 
@@ -61,7 +61,7 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
     <ThemedView style={styles.container}>
       <Header blog={blog} onUpdateBlogs={onUpdateBlogs} />
       <Main blog={blog} onUpdateBlogs={onUpdateBlogs} />
-      <Source />
+      {source && <Source data={source} />}
     </ThemedView>
   );
 };

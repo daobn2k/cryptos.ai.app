@@ -31,7 +31,6 @@ const TopTabs = () => {
           backgroundColor: background,
           justifyContent: "center",
         },
-        tabBarActiveTintColor: "white",
         tabBarLabelStyle: { position: "relative" },
         tabBarIndicatorStyle: {
           display: "none",
