@@ -1,36 +1,49 @@
-import React, { useEffect, useState } from "react";
 import * as Updates from "expo-updates";
-import { ActivityIndicator, Button, Image, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  View,
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../constants/Colors";
+import { useThemeColor } from "../hooks/useThemeColor";
 import { ThemedText } from "./ThemedText";
+const screenWidth = Dimensions.get("window").width;
 
 const UpdateCheck = () => {
-  const [isChecking, setIsChecking] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const checkForUpdates = async () => {
-    setIsChecking(true);
+  const { isUpdateAvailable, isUpdatePending } = Updates.useUpdates();
+
+  const updateVersion = async () => {
     try {
       setIsUpdating(true);
-      const isUpdateAvailable = await Updates.checkForUpdateAsync();
-      if (isUpdateAvailable) {
-        await Updates.fetchUpdateAsync();
-        await Updates.reloadAsync();
-      }
-    } catch (e) {
-      console.error(e);
+      await Updates.fetchUpdateAsync();
     } finally {
-      setIsChecking(false);
       setIsUpdating(false);
     }
   };
 
   useEffect(() => {
-    checkForUpdates();
-  }, []);
+    if (isUpdatePending) {
+      // Update has successfully downloaded; apply it now
+      Updates.reloadAsync();
+    }
+  }, [isUpdatePending]);
 
+  const buttonPrimary = useThemeColor(
+    {
+      light: Colors.light["button-primary"],
+      dark: Colors.dark["button-primary"],
+    },
+    "button-primary"
+  );
+  const showDownloadButton = isUpdateAvailable;
   return (
     <>
-      {(isChecking || isUpdating) && (
+      {showDownloadButton && (
         <View
           style={{
             position: "absolute",
@@ -56,15 +69,41 @@ const UpdateCheck = () => {
               source={require("@assets/home/home-page-logo.png")}
               style={{ width: 135, height: 96 }}
             />
-            <ActivityIndicator size={24} color={Colors.dark["white-a80"]} />
 
-            <ThemedText color="text-primary">Updating ...</ThemedText>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: buttonPrimary }]}
+              onPress={() => updateVersion()}
+            >
+              <ThemedText type="font-body-md" color="text-inverse">
+                Test update new version now
+              </ThemedText>
+              {isUpdating && (
+                <ActivityIndicator
+                  size={24}
+                  color={Colors.dark["text-inverse"]}
+                />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
       )}
     </>
   );
-  return <></>;
 };
 
 export default UpdateCheck;
+
+const styles = StyleSheet.create({
+  button: {
+    width: screenWidth - 32,
+    flexDirection: "row",
+    gap: 8,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 32,
+    marginTop: 32,
+  },
+});
