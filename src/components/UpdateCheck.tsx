@@ -7,13 +7,15 @@ import { ThemedText } from "./ThemedText";
 const UpdateCheck = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const { isUpdateAvailable } = Updates.useUpdates();
   const checkForUpdates = async () => {
     setIsChecking(true);
     try {
       setIsUpdating(true);
-      await Updates.fetchUpdateAsync();
-      await Updates.reloadAsync();
+      const isUpdateAvailable = await Updates.checkForUpdateAsync();
+      if (isUpdateAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -23,10 +25,8 @@ const UpdateCheck = () => {
   };
 
   useEffect(() => {
-    if (isUpdateAvailable) {
-      checkForUpdates();
-    }
-  }, [isUpdateAvailable]);
+    checkForUpdates();
+  }, []);
 
   return (
     <>
