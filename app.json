@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vandao2k.cryptoaiapp"
+      "bundleIdentifier": "com.vandao2k.cryptoaiapp",
+      "buildNumber":"2"
     },
     "android": {
       "adaptiveIcon": {

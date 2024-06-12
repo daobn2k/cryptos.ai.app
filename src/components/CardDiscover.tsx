@@ -4,7 +4,7 @@ import { useDataBlog } from "@/src/hooks/useDataBlog";
 import { useThemeColor } from "@/src/hooks/useThemeColor";
 import { Blog } from "@/src/utils/blog.utils";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { Dimensions, Image, Linking, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -217,7 +217,7 @@ const CardDiscover: React.FC<CardViewProps> = ({
   );
 };
 
-export default CardDiscover;
+export default memo(CardDiscover);
 
 export const ViewAction = ({
   value,

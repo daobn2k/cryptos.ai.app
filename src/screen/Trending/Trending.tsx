@@ -91,11 +91,8 @@ export default function Trending() {
       {isRefreshing && <ActivityIndicator color={"white"} />}
       {(firstLoading || loadingBlog) && (
         <ParallaxScrollView>
-          {Array.from({ length: 10 }).map((_: any, key: number) => (
-            <>
-              <SkeletonDiscover key={"trending-skeleton" + key} />
-            </>
-          ))}
+          <SkeletonDiscover />
+          <SkeletonDiscover />
         </ParallaxScrollView>
       )}
       {!loadingBlog && (

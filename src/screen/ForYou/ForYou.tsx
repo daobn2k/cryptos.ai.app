@@ -1,4 +1,6 @@
 import CardDiscover from "@/src/components/CardDiscover";
+import ParallaxScrollView from "@/src/components/ParallaxScrollView";
+import SkeletonDiscover from "@/src/components/SkeletonDiscover";
 import { ThemedView } from "@/src/components/ThemedView";
 import { Blog } from "@/src/utils/blog.utils";
 import { useRequest } from "ahooks";
@@ -10,11 +12,7 @@ import {
   RefreshControl,
   StyleSheet,
 } from "react-native";
-import ParallaxScrollView from "@/src/components/ParallaxScrollView";
-import SkeletonDiscover from "@/src/components/SkeletonDiscover";
-import { ThemedText } from "@/src/components/ThemedText";
 import Animated from "react-native-reanimated";
-import { View } from "moti";
 import { getBlogFollowings } from "../Trending/serivce";
 const heightScreen = Dimensions.get("window").height;
 
@@ -60,7 +58,7 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 5 });
   }, []);
 
   const onNext = () => {
@@ -74,7 +72,7 @@ export default function Trending() {
   };
   const onRefresh = () => {
     setIsRefreshing(true);
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 5 });
   };
 
   const onUpdateBlogs = (data: Blog, position: number) => {
@@ -90,11 +88,8 @@ export default function Trending() {
       {isRefreshing && <ActivityIndicator color={"white"} />}
       {loadingBlog && (
         <ParallaxScrollView>
-          {Array.from({ length: 10 }).map((_: any, key: number) => (
-            <>
-              <SkeletonDiscover key={"for-you-skeleton" + key} />
-            </>
-          ))}
+          <SkeletonDiscover />
+          <SkeletonDiscover />
         </ParallaxScrollView>
       )}
       {!loadingBlog && (
@@ -115,7 +110,7 @@ export default function Trending() {
           snapToAlignment="start"
           decelerationRate={"fast"}
           snapToInterval={heightScreen - 284}
-          onEndReachedThreshold={1}
+          onEndReachedThreshold={0.5}
           onEndReached={() => onNext()}
           refreshControl={
             <RefreshControl
