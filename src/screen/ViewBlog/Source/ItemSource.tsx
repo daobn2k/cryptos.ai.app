@@ -7,8 +7,9 @@ import { ISource } from ".";
 
 interface IItemSource {
   data: { url: string; id: string; name: string };
+  position: number;
 }
-export const ItemSource: React.FC<IItemSource> = ({ data }) => {
+export const ItemSource: React.FC<IItemSource> = ({ data, position }) => {
   const onPress = () => {
     console.log("onPress");
   };
@@ -47,7 +48,7 @@ export const ItemSource: React.FC<IItemSource> = ({ data }) => {
             }}
           >
             <ThemedText color="text-tertiary" type="font-10-500">
-              1
+              {position + 1}
             </ThemedText>
           </View>
         </View>
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
     width: 192,
     height: 96,
     borderRadius: 8,
+    marginRight: 8,
   },
   image: {
     width: 20,

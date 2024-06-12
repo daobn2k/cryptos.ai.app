@@ -93,7 +93,7 @@ export const Colors = {
     'border-primary': '#464646',
     'bg-black-a80': '#000000cc',
     'text-primary': '#FFFFFFE5',
-    'text-tertiary': '#ffffff80',
+    'text-tertiary': '#FFFFFF80',
     'text-inverse': '#050505',
     'text-pallete-lime-500': '#44d62c',
     'white-a20': '#ffffff33',

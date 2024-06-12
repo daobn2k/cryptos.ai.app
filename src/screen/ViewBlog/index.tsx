@@ -1,7 +1,7 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
 import React, { useCallback, useMemo } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Header from "./Header";
 import { useMount, useRequest } from "ahooks";
 import { getBlogSlugDetail } from "./service";
@@ -11,6 +11,10 @@ import Main from "./Main";
 import { Colors } from "@/src/constants/Colors";
 import Source from "./Source";
 import { uniqBy } from "lodash";
+import Related from "./Related";
+import ParallaxScrollView from "@/src/components/ParallaxScrollView";
+import HightLight from "./HightLight";
+import { ScrollView } from "react-native-gesture-handler";
 
 export const ViewBlog = ({ slug }: { slug: any }) => {
   const { data, run, loading, mutate } = useRequest(getBlogSlugDetail, {
@@ -57,12 +61,20 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
     };
   }, [blog?.cluster?.tweets]);
 
+  const content = useMemo(() => {
+    return blog.content;
+  }, [blog.content]);
+
   return (
-    <ThemedView style={styles.container}>
+    <ScrollView style={styles.container}>
       <Header blog={blog} onUpdateBlogs={onUpdateBlogs} />
       <Main blog={blog} onUpdateBlogs={onUpdateBlogs} />
       {source && <Source data={source} />}
-    </ThemedView>
+      <HightLight content={content} />
+      {blog && (
+        <Related related_questions={blog.related_questions} id={blog.id} />
+      )}
+    </ScrollView>
   );
 };
 

@@ -3,7 +3,7 @@ import { ThemedView } from "@/src/components/ThemedView";
 import { Colors } from "@/src/constants/Colors";
 import React, { useState } from "react";
 import { Animated, Image, StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { GroupAvatar } from "./GroupAvatar";
 import { ItemSource } from "./ItemSource";
 export interface ISource {
@@ -58,18 +58,19 @@ const Source: React.FC<ISource> = ({ data }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <Animated.View style={styles.bottom}>
+        <ScrollView horizontal={true}>
           {data?.length > 0 &&
             isVisible &&
             data.map((source, key) => {
               return (
                 <ItemSource
+                  position={key}
                   data={source}
                   key={source.id + key + "item-source"}
                 />
               );
             })}
-        </Animated.View>
+        </ScrollView>
       </ThemedView>
     </ThemedView>
   );
@@ -94,10 +95,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  bottom: {
-    flexDirection: "row",
-    gap: 8,
-    overflow: "scroll",
   },
 });
