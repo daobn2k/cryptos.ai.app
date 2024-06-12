@@ -18,5 +18,10 @@ export function ThemedView({
     "background"
   );
 
-  return <View style={[{ backgroundColor }, style]} {...otherProps} />;
+  return (
+    <View
+      style={[{ backgroundColor: backgroundColor }, style]}
+      {...otherProps}
+    />
+  );
 }

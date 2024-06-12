@@ -92,7 +92,7 @@ export const Colors = {
   dark: {
     'border-primary': '#464646',
     'bg-black-a80': '#000000cc',
-    'text-primary': '#ffffffe6',
+    'text-primary': '#FFFFFFE5',
     'text-tertiary': '#ffffff80',
     'text-inverse': '#050505',
     'text-pallete-lime-500': '#44d62c',
@@ -103,7 +103,7 @@ export const Colors = {
     'text-danger': '#ef4444',
     'text-cyan': '#38c5b4',
     'text-neutral-700': '#dcdcdc',
-    'text-secondary': '#ffffffb3',
+    'text-secondary': '#FFFFFFB2',
     'text-info': '#65a9f3',
     'bg-gray': '#3d3d3d',
     'neutral-300': '#676b73',

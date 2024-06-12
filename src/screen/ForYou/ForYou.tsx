@@ -110,7 +110,7 @@ export default function Trending() {
           snapToAlignment="start"
           decelerationRate={"fast"}
           snapToInterval={heightScreen - 284}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={2}
           onEndReached={() => onNext()}
           refreshControl={
             <RefreshControl
@@ -131,7 +131,9 @@ export default function Trending() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingTop: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
     gap: 16,
   },
 });

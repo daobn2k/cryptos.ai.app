@@ -7,16 +7,19 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import * as Updates from "expo-updates";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/src/hooks/useColorScheme";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
+  Button,
   Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { Colors } from "@/src/constants/Colors";
@@ -31,6 +34,16 @@ export default function RootLayout() {
     "Aspekta-Medium": require("../assets/fonts/Aspekta-500.ttf"),
     "Aspekta-Bold": require("../assets/fonts/Aspekta-600.ttf"),
   });
+
+  const { currentlyRunning, isUpdateAvailable, isUpdatePending } =
+    Updates.useUpdates();
+
+  useEffect(() => {
+    if (isUpdatePending) {
+      // Update has successfully downloaded; apply it now
+      Updates.reloadAsync();
+    }
+  }, [isUpdatePending]);
 
   useEffect(() => {
     if (loaded) {
@@ -49,7 +62,10 @@ export default function RootLayout() {
     // colorScheme === 'dark' ?   'light-content' : 'dark-content'
   );
   const insets = useSafeAreaInsets();
-
+  const showDownloadButton = isUpdateAvailable;
+  const runTypeMessage = currentlyRunning.isEmbeddedLaunch
+    ? "This app is running from built-in code"
+    : "This app is running an update";
   return (
     <GestureHandlerRootView>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -62,6 +78,14 @@ export default function RootLayout() {
             },
           ]}
         >
+          {showDownloadButton ? (
+            <Button
+              onPress={() => Updates.fetchUpdateAsync()}
+              title="Download and run update"
+            />
+          ) : null}
+          <Text>{runTypeMessage}</Text>
+
           <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen

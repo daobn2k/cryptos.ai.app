@@ -3,7 +3,7 @@ import { ThemedText } from "@/src/components/ThemedText";
 import { Colors } from "@/src/constants/Colors";
 import { useReaction } from "@/src/hooks/useReaction";
 import { useThemeColor } from "@/src/hooks/useThemeColor";
-import { formatNumber } from "@/src/utils/fc.untils";
+import { conditionShowTime, formatNumber } from "@/src/utils/fc.untils";
 import React, { memo } from "react";
 import { StyleSheet, View } from "react-native";
 import { PropsViewBlog } from "../Header";
@@ -36,7 +36,7 @@ const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
             source={
               blog?.reaction === "BULL"
                 ? require("@assets/home/active-trade-up.png")
-                : require("@assets/home/home-trade-up.png")
+                : require("@assets/view-blog/ic-trade-up.png")
             }
             value={formatNumber(blog?.total_bull) || 0}
             style={
@@ -46,7 +46,7 @@ const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
               color:
                 blog?.reaction === "BULL"
                   ? Colors.dark["text-success"]
-                  : Colors.dark["white-a80"],
+                  : Colors.dark["text-secondary"],
             }}
           />
           <View style={styles.lineAbsolute}>
@@ -57,7 +57,7 @@ const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
             source={
               blog?.reaction === "BEAR"
                 ? require("@assets/home/active-trade-down.png")
-                : require("@assets/home/home-trade-down.png")
+                : require("@assets/view-blog/ic-trade-down.png")
             }
             value={formatNumber(blog?.total_bear) || 0}
             style={
@@ -67,20 +67,28 @@ const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
               color:
                 blog?.reaction === "BEAR"
                   ? Colors.dark["text-danger"]
-                  : Colors.dark["white-a80"],
+                  : Colors.dark["text-secondary"],
             }}
           />
         </View>
         <View style={styles.listViews}>
           <ViewAction
-            source={require("@assets/home/home-share.png")}
-            value={formatNumber(blog?.total_shared) || 0}
+            source={require("@assets/view-blog/ic-clock-03.png")}
+            value={blog.created_at ? conditionShowTime(blog.created_at) : ""}
             style={styles.touchView}
+            textStyle={{ color: Colors.dark["text-tertiary"] }}
           />
           <ViewAction
-            source={require("@assets/home/home-bookmark-outline.png")}
+            source={require("@assets/view-blog/ic-share-03.png")}
+            value={formatNumber(blog?.total_shared) || 0}
+            style={styles.touchView}
+            textStyle={{ color: Colors.dark["text-tertiary"] }}
+          />
+          <ViewAction
+            source={require("@assets/view-blog/ic-book-mark-view.png")}
             value={formatNumber(blog?.total_saved) || 0}
             style={styles.touchView}
+            textStyle={{ color: Colors.dark["text-tertiary"] }}
           />
         </View>
       </View>
@@ -90,7 +98,6 @@ const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
 export default memo(Main);
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
   },
   viewHead: {
@@ -122,8 +129,9 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingLeft: 4,
     paddingRight: 4,
-    borderRadius: 9999,
+    borderRadius: 4,
     position: "relative",
+    backgroundColor: Colors.dark["white-a10"],
   },
 
   touch: {
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingLeft: 8,
     paddingRight: 8,
-    borderRadius: 9999,
+    borderRadius: 4,
   },
   touchView: {
     flexDirection: "row",
@@ -160,5 +168,6 @@ const styles = StyleSheet.create({
   },
   touchActive: {
     backgroundColor: Colors.dark["white-a100"],
+    borderRadius: 4,
   },
 });

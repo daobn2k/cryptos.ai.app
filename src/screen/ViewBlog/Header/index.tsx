@@ -8,6 +8,7 @@ import { Blog } from "@/src/utils/blog.utils";
 import { useSaved } from "@/src/hooks/useSaved";
 import { useShare } from "@/src/hooks/useShare";
 import { useRouter } from "expo-router";
+import { Colors } from "@/src/constants/Colors";
 
 export interface PropsViewBlog {
   blog: Blog;
@@ -60,6 +61,7 @@ const Header: React.FC<PropsViewBlog> = ({ blog, onUpdateBlogs }) => {
 export default memo(Header);
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.dark["background-02"],
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -67,6 +69,9 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 16,
     paddingRight: 16,
+    borderBottomWidth: 1,
+    borderStyle: "solid",
+    borderColor: Colors.dark["border-1"],
   },
   back: {
     padding: 4,

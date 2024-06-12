@@ -15,7 +15,7 @@ import {
 import { useSaved } from "../hooks/useSaved";
 import { useReaction } from "../hooks/useReaction";
 import { useShare } from "../hooks/useShare";
-// import { getColors } from "react-native-image-colors";
+import { getColors } from "react-native-image-colors";
 import { useRouter } from "expo-router";
 
 interface CardViewProps {
@@ -48,19 +48,19 @@ const CardDiscover: React.FC<CardViewProps> = ({
     { light: Colors.light["white-a10"], dark: Colors.dark["white-a10"] },
     "white-a10"
   );
-  // const handleImageLoad = async () => {
-  //   try {
-  //     const result: any = await getColors(data.image_url, {
-  //       fallback: "#050505",
-  //       cache: true,
-  //       key: data.image_url,
-  //     });
-  //     const color: any = adjustHexColor(result.detail);
-  //     setColor(color);
-  //   } catch (error) {
-  //     console.error("Error extracting colors:", error);
-  //   }
-  // };
+  const handleImageLoad = async () => {
+    try {
+      const result: any = await getColors(data.image_url, {
+        fallback: "#050505",
+        cache: true,
+        key: data.image_url,
+      });
+      const color: any = adjustHexColor(result.detail);
+      setColor(color);
+    } catch (error) {
+      console.error("Error extracting colors:", error);
+    }
+  };
 
   const onPressSaved = () => {
     onClickSaved(blog, updateBlog, position);
@@ -121,7 +121,7 @@ const CardDiscover: React.FC<CardViewProps> = ({
               height: 327,
               resizeMode: "contain",
             }}
-            // onLoad={handleImageLoad}
+            onLoad={handleImageLoad}
           />
         </View>
       </TouchableOpacity>

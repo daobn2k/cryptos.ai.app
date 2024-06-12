@@ -1,13 +1,16 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import Header from "./Header";
 import { useMount, useRequest } from "ahooks";
 import { getBlogSlugDetail } from "./service";
 import { useDataBlog } from "@/src/hooks/useDataBlog";
-import { Blog } from "@/src/utils/blog.utils";
+import { Blog, Tweet } from "@/src/utils/blog.utils";
 import Main from "./Main";
+import { Colors } from "@/src/constants/Colors";
+import Source from "./Source";
+import { uniqBy } from "lodash";
 
 export const ViewBlog = ({ slug }: { slug: any }) => {
   const { data, run, loading, mutate } = useRequest(getBlogSlugDetail, {
@@ -35,10 +38,30 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
     [mutate]
   );
 
+  const { source = [], avatars } = useMemo(() => {
+    if (blog?.cluster?.tweets?.length <= 0)
+      return {
+        source: [],
+        avatars: [],
+      };
+
+    console.log(blog?.cluster?.tweets, "blog?.cluster?.tweets");
+
+    const tweet = uniqBy(blog?.cluster?.tweets, "_id");
+    return {
+      source: blog?.cluster?.tweets?.map((tweet: Tweet) => ({
+        name: tweet?.twitter_user?.name,
+        id: tweet?.twitter_user?.id,
+        url: tweet?.media[0]?.media_url_https || "",
+      })),
+    };
+  }, [blog?.cluster?.tweets]);
+
   return (
     <ThemedView style={styles.container}>
       <Header blog={blog} onUpdateBlogs={onUpdateBlogs} />
       <Main blog={blog} onUpdateBlogs={onUpdateBlogs} />
+      <Source />
     </ThemedView>
   );
 };
@@ -46,5 +69,6 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.dark["background-02"],
   },
 });

@@ -36,7 +36,7 @@ export default function HomeScreen() {
       </View>
       <View style={styles.main}>
         <Image
-          source={require("../assets/images/logo.png")}
+          source={require("../assets/home/home-page-logo.png")}
           style={styles.logo}
         />
         <View style={styles.viewText}>
@@ -44,7 +44,7 @@ export default function HomeScreen() {
             Stay up to date with the latest
           </ThemedText>
           <ThemedText type="font-body-md" color="text-tertiary">
-            Crypto news
+            Crypto news Test
           </ThemedText>
         </View>
         <Link
