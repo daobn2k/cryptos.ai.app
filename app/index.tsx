@@ -1,17 +1,75 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import { Colors } from "@/src/constants/Colors";
+import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
+import { useProfile } from "@/src/hooks/useProfile";
 import { useThemeColor } from "@/src/hooks/useThemeColor";
-import { ROUTE_PATH } from "@/src/utils/router.utilts";
-import { Link, useRouter } from "expo-router";
-import { Dimensions, Image, Pressable, StyleSheet, View } from "react-native";
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  View,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+WebBrowser.maybeCompleteAuthSession();
+
 const screenWidth = Dimensions.get("window").width;
+const discovery = {
+  authorizationEndpoint: "https://twitter.com/i/oauth2/authorize",
+};
 
 export default function HomeScreen() {
   const router = useRouter();
-  const onPress = () => {
-    router.push({ pathname: ROUTE_PATH.TRENDING });
+  const [loading, setLoading] = useState(false);
+  const { setAsyncStorage } = useCustomAsyncStorage();
+  const { onGetInfo } = useProfile();
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: "bnFFRDZkejFtOEd4clR1SlV5M1A6MTpjaQ",
+      redirectUri: makeRedirectUri(),
+      usePKCE: true,
+      scopes: ["tweet.read", "offline.access", "users.read"],
+      codeChallenge: "challenge",
+      responseType: "code",
+      state: "state",
+    },
+    discovery
+  );
+  const auth = async (code: string) => {
+    setLoading(true);
+    try {
+      // const res = await serviceAuthLogin({ code });
+      // "res.data.access_token"
+      const accessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmU3MGVhNy1hNGI1LTRhMzUtOTZkNC0yNTI4Mzg3ODdhYzgiLCJpYXQiOjE3MTgyNjQ1MTksImV4cCI6MTcxODg2OTMxOX0.T--U7ZDvu26vfvWV2dl7-q5IsmbJBgdpgiGY8bgPDhY";
+      if (accessToken) {
+        await setAsyncStorage("accessToken", accessToken);
+        const profile = await onGetInfo(accessToken);
+        if (profile?.status_code === 200) {
+          router.push(`/trending`);
+        }
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error(error, "error");
+    }
   };
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
+      // console.log(response.params, "response.params");
+      auth(code);
+    }
+  }, [response]);
+
   const buttonPrimary = useThemeColor(
     {
       light: Colors.light["button-primary"],
@@ -47,21 +105,24 @@ export default function HomeScreen() {
             Crypto news
           </ThemedText>
         </View>
-        <Link
-          href="/trending"
-          asChild
+        <TouchableOpacity
+          onPress={() => promptAsync()}
           style={[styles.button, { backgroundColor: buttonPrimary }]}
         >
-          <Pressable>
-            <Image
-              source={require("../assets/images/ic-x.png")}
-              style={styles.icX}
-            />
-            <ThemedText type="font-body-md" color="text-inverse">
-              Continue with X
-            </ThemedText>
-          </Pressable>
-        </Link>
+          {!loading ? (
+            <>
+              <Image
+                source={require("../assets/images/ic-x.png")}
+                style={styles.icX}
+              />
+              <ThemedText type="font-body-md" color="text-inverse">
+                Continue with X
+              </ThemedText>
+            </>
+          ) : (
+            <ActivityIndicator size={24} color={Colors.dark["text-inverse"]} />
+          )}
+        </TouchableOpacity>
         <View>
           <ThemedText type="font-11-500" color="text-tertiary">
             Powered by GM.AI

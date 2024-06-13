@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingLeft: 4,
     paddingRight: 4,
-    borderRadius: 8,
+    borderRadius: 9999,
     position: "relative",
     backgroundColor: Colors.dark["white-a10"],
   },
@@ -168,6 +168,6 @@ const styles = StyleSheet.create({
   },
   touchActive: {
     backgroundColor: Colors.dark["white-a100"],
-    borderRadius: 4,
+    borderRadius: 9999,
   },
 });

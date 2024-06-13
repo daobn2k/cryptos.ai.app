@@ -2,10 +2,10 @@
   "expo": {
     "name": "cryptos.ai",
     "slug": "crypto-ai-app",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
-    "scheme": "cryptoaiapp",
+    "scheme": "com.vandao2k.cryptoaiapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/favicon.png",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.vandao2k.cryptoaiapp",
-      "buildNumber": "9"
+      "buildNumber": "10"
     },
     "android": {
       "adaptiveIcon": {
@@ -54,6 +54,6 @@
       "checkAutomatically": "ON_LOAD",
       "url": "https://u.expo.dev/f80c3a3d-5a75-41eb-ba26-df1812f13b34"
     },
-    "runtimeVersion": "1.0.9"
+    "runtimeVersion": "1.0.6"
   }
 }

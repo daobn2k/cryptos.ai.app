@@ -1,7 +1,7 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
-import React, { useCallback, useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Dimensions, Image, StyleSheet, TextInput, View } from "react-native";
 import Header from "./Header";
 import { useMount, useRequest } from "ahooks";
 import { getBlogSlugDetail } from "./service";
@@ -15,6 +15,7 @@ import Related from "./Related";
 import ParallaxScrollView from "@/src/components/ParallaxScrollView";
 import HightLight from "./HightLight";
 import { ScrollView } from "react-native-gesture-handler";
+const screenWidth = Dimensions.get("window").width;
 
 export const ViewBlog = ({ slug }: { slug: any }) => {
   const { data, run, loading, mutate } = useRequest(getBlogSlugDetail, {
@@ -64,6 +65,8 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
   const content = useMemo(() => {
     return blog.content;
   }, [blog.content]);
+  // const [message, setMessage] = useState("");
+  // const onChangeText = () => {};
 
   return (
     <ScrollView style={styles.container}>
@@ -74,6 +77,17 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
       {blog && (
         <Related related_questions={blog.related_questions} id={blog.id} />
       )}
+      {/* <View>
+        <TextInput
+          editable
+          multiline
+          numberOfLines={4}
+          maxLength={40}
+          onChangeText={(text) => setMessage(text)}
+          value={message}
+          style={{ padding: 10 }}
+        />
+      </View> */}
     </ScrollView>
   );
 };

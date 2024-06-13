@@ -43,6 +43,9 @@ const UpdateCheck = () => {
   const showDownloadButton = isUpdateAvailable;
   return (
     <>
+      <ThemedText type="font-15-500" color="text-primary">
+        {showDownloadButton}
+      </ThemedText>
       {showDownloadButton && (
         <View
           style={{
@@ -75,7 +78,7 @@ const UpdateCheck = () => {
               onPress={() => updateVersion()}
             >
               <ThemedText type="font-body-md" color="text-inverse">
-                Test update new version now
+                Update new version
               </ThemedText>
               {isUpdating && (
                 <ActivityIndicator

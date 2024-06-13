@@ -1,8 +1,9 @@
 {
   "name": "crypto-ai-app",
   "main": "expo-router/entry",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "scripts": {
+    "submit-app":"eas build -p ios --auto-submit & eas update --auto",
     "start:dev": "expo start --https",
     "start": "expo start --dev-client",
     "reset-project": "node ./scripts/reset-project.js",

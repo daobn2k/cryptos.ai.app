@@ -1,30 +1,20 @@
 import {
   DarkTheme,
   DefaultTheme,
-  NavigationContainer,
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import * as Updates from "expo-updates";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/src/hooks/useColorScheme";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  Button,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Colors } from "@/src/constants/Colors";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import UpdateCheck from "@/src/components/UpdateCheck";
+import { Colors } from "@/src/constants/Colors";
+import { useColorScheme } from "@/src/hooks/useColorScheme";
+import { Platform, StatusBar, StyleSheet, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,16 +25,6 @@ export default function RootLayout() {
     "Aspekta-Medium": require("../assets/fonts/Aspekta-500.ttf"),
     "Aspekta-Bold": require("../assets/fonts/Aspekta-600.ttf"),
   });
-
-  const { currentlyRunning, isUpdateAvailable, isUpdatePending } =
-    Updates.useUpdates();
-
-  useEffect(() => {
-    if (isUpdatePending) {
-      // Update has successfully downloaded; apply it now
-      Updates.reloadAsync();
-    }
-  }, [isUpdatePending]);
 
   useEffect(() => {
     if (loaded) {

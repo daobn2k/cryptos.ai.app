@@ -227,14 +227,14 @@ export const ViewAction = ({
   textStyle,
 }: {
   value: string | number;
-  source: any;
+  source?: any;
   onPress?: () => void;
   style?: any;
   textStyle?: any;
 }) => {
   return (
     <TouchableOpacity style={[styles.touch, style]} onPress={onPress}>
-      <Image source={source} style={styles.imageAction} />
+      {source && <Image source={source} style={styles.imageAction} />}
       <ThemedText type="font-12-500" color="white-a80" style={textStyle}>
         {value}
       </ThemedText>

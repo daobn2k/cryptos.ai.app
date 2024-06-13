@@ -4,6 +4,7 @@ import { Colors } from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
 import { Image, StyleSheet } from "react-native";
 import { BlurView } from "expo-blur";
+import { ThemedText } from "@/src/components/ThemedText";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -24,34 +25,26 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"]["text-primary"],
         headerShown: false,
         tabBarStyle: {
-          // backgroundColor: "#00000066",
           position: "absolute",
           alignItems: "center",
           borderTopColor: "transparent",
-          bottom: 0,
+          justifyContent: "center",
         },
       }}
     >
       <Tabs.Screen
-        name="(discover)"
-        options={{
-          tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) => (
-            <Image
-              style={styles.logo}
-              source={
-                focused
-                  ? require("../../assets/menu/active-dark-home-filled.png")
-                  : require("../../assets/menu/dark-home-outline.png")
-              }
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="chat"
         options={{
-          tabBarShowLabel: false,
+          tabBarLabel: ({ color, focused }) => {
+            return (
+              <ThemedText
+                type="font-11-500"
+                color={focused ? "text-primary" : "text-tertiary"}
+              >
+                Search
+              </ThemedText>
+            );
+          },
           tabBarIcon: ({ color, focused }) => (
             <Image
               style={styles.logo}
@@ -59,6 +52,31 @@ export default function TabLayout() {
                 focused
                   ? require("../../assets/menu/active-dark-search-filled.png")
                   : require("../../assets/menu/dark-search-outline.png")
+              }
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="(discover)"
+        options={{
+          tabBarLabel: ({ color, focused }) => {
+            return (
+              <ThemedText
+                type="font-11-500"
+                color={focused ? "text-primary" : "text-tertiary"}
+              >
+                Discover
+              </ThemedText>
+            );
+          },
+          tabBarIcon: ({ focused }) => (
+            <Image
+              style={styles.logo}
+              source={
+                focused
+                  ? require("../../assets/menu/ic-compass-fill.png")
+                  : require("../../assets/menu/ic-compass-line.png")
               }
             />
           ),
@@ -82,7 +100,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarShowLabel: false,
+          tabBarLabel: ({ color, focused }) => {
+            return (
+              <ThemedText
+                type="font-11-500"
+                color={focused ? "text-primary" : "text-tertiary"}
+              >
+                Profile
+              </ThemedText>
+            );
+          },
           tabBarIcon: ({ focused }) => (
             <Image
               style={styles.logo}
@@ -103,6 +130,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 24,
     height: 24,
-    objectFit: "cover",
+    objectFit: "contain",
   },
 });

@@ -1,15 +1,19 @@
-import ParallaxScrollView from '@/src/components/ParallaxScrollView';
-import { ThemedText } from '@/src/components/ThemedText';
-import { ThemedView } from '@/src/components/ThemedView';
+import ParallaxScrollView from "@/src/components/ParallaxScrollView";
+import { ThemedText } from "@/src/components/ThemedText";
+import { ThemedView } from "@/src/components/ThemedView";
+import { Colors } from "@/src/constants/Colors";
+import Profile from "@/src/screen/Profile";
 
 export default function ProfileScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      setting={{
+        style: {
+          padding: 16,
+        },
+      }}
     >
-      <ThemedView>
-        <ThemedText>Profile</ThemedText>
-      </ThemedView>
+      <Profile />
     </ParallaxScrollView>
   );
 }
