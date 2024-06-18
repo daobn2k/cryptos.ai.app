@@ -23,13 +23,13 @@ export function ThemedText({
 
   return (
     <Text
-      style={[{ color: colorText }, type && styles[type], style]}
+      style={[{ color: colorText }, type && textStyles[type], style]}
       {...rest}
     />
   );
 }
 
-const styles = StyleSheet.create({
+export const textStyles = StyleSheet.create({
   "font-24-500": {
     fontSize: 24, // 1.5rem = 24px
     fontFamily: "Aspekta-Medium",
@@ -99,6 +99,11 @@ const styles = StyleSheet.create({
     fontSize: 14, // 0.875rem = 14px
     fontFamily: "Aspekta",
     lineHeight: 22.4, // 160% of 14px
+  },
+  "font-16-400": {
+    fontSize: 16,
+    fontFamily: "Aspekta",
+    lineHeight: 25.6,
   },
   "font-16-500": {
     fontSize: 16, // 1rem = 16px

@@ -33,6 +33,7 @@ const Related: React.FC<IRelated> = ({ related_questions, id }) => {
       <View>
         {related_questions?.length > 0 &&
           related_questions.map((r, key: number) => {
+            const lastItem = related_questions.length - 1 === key;
             return (
               <TouchableOpacity
                 key={"related" + key + r}
@@ -44,7 +45,7 @@ const Related: React.FC<IRelated> = ({ related_questions, id }) => {
                   alignItems: "center",
                   gap: 16,
                   borderTopWidth: 1,
-                  borderBottomWidth: 1,
+                  borderBottomWidth: lastItem ? 0 : 1,
                   borderStyle: "solid",
                   borderColor: "#2B2B2B",
                 }}
@@ -58,7 +59,7 @@ const Related: React.FC<IRelated> = ({ related_questions, id }) => {
                   {r}
                 </ThemedText>
                 <Image
-                  source={require("@assets/view-blog/ic-right-line.png")}
+                  source={require("@assets/view-blog/arrow_right_up_line.png")}
                   style={{ width: 24, height: 24, resizeMode: "cover" }}
                 />
               </TouchableOpacity>

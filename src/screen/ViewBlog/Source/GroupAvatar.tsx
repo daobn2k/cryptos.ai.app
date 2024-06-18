@@ -2,11 +2,12 @@ import { ThemedText } from "@/src/components/ThemedText";
 import React from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { ISource } from ".";
+import { Skeleton } from "moti/skeleton";
 
-export const GroupAvatar: React.FC<ISource> = ({ data }) => {
+export const GroupAvatar: React.FC<ISource> = ({ data, loading }) => {
   return (
     <View style={styles.list}>
-      {data?.length > 0 ? (
+      {!loading && data?.length > 0 ? (
         data.map((e, key) => {
           return (
             <View
@@ -25,6 +26,13 @@ export const GroupAvatar: React.FC<ISource> = ({ data }) => {
         })
       ) : (
         <></>
+      )}
+      {loading && (
+        <>
+          <Skeleton width={16} height={16} />
+          <Skeleton width={16} height={16} />
+          <Skeleton width={16} height={16} />
+        </>
       )}
     </View>
   );

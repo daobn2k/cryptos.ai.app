@@ -42,7 +42,8 @@ export type colorTypes =
   | "text-primary-danger"
   | "white-a20"
   | "border-white-a10"
-  | "a-70";
+  | "a-70"
+  | "background-01";
 export type textTypes =
   | "font-21-500"
   | "font-14-400"
@@ -67,4 +68,5 @@ export type textTypes =
   | "font-heading-xl"
   | "font-16-500"
   | "font-15-600"
+  | "font-16-400"
   | undefined;

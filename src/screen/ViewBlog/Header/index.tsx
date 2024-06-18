@@ -29,7 +29,7 @@ const Header: React.FC<PropsViewBlog> = ({ blog, onUpdateBlogs }) => {
     <ThemedView style={styles.container}>
       <TouchableOpacity style={styles.back} onPress={() => router.back()}>
         <Image
-          source={require("@assets/view-blog/ic-chevron-left.png")}
+          source={require("@assets/images/ic-close-line.png")}
           style={styles.icBack}
         />
       </TouchableOpacity>
@@ -49,7 +49,7 @@ const Header: React.FC<PropsViewBlog> = ({ blog, onUpdateBlogs }) => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.action} onPress={onPressShare}>
           <Image
-            source={require("@assets/view-blog/ic-share-top.png")}
+            source={require("@assets/view-blog/ic-share-2-line.png")}
             style={styles.icAction}
           />
         </TouchableOpacity>
@@ -78,7 +78,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  icBack: {},
+  icBack: {
+    width: 24,
+    height: 24,
+  },
   actions: {
     flexDirection: "row",
   },

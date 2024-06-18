@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.6",
   "scripts": {
-    "submit-app":"eas build -p ios --auto-submit & eas update --auto",
+    "submit-app": "eas build -p ios --auto-submit & eas update --auto",
     "start:dev": "expo start --https",
     "start": "expo start --dev-client",
     "reset-project": "node ./scripts/reset-project.js",
@@ -53,10 +53,12 @@
     "react-native-pager-view": "6.3.0",
     "react-native-palette": "^1.2.2",
     "react-native-reanimated": "~3.10.1",
+    "react-native-render-html": "^6.3.4",
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "3.31.1",
     "react-native-tab-view": "^3.5.2",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "showdown": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -64,6 +66,7 @@
     "@types/lodash": "^4.17.4",
     "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.0.7",
+    "@types/showdown": "^2.0.6",
     "jest": "^29.2.1",
     "jest-expo": "~51.0.1",
     "react-test-renderer": "18.2.0",

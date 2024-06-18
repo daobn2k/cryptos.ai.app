@@ -2,7 +2,7 @@ import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
 import { Colors } from "@/src/constants/Colors";
 import React, { useState } from "react";
-import { Animated, Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { GroupAvatar } from "./GroupAvatar";
 import { ItemSource } from "./ItemSource";
@@ -11,9 +11,11 @@ export interface ISource {
     name: string;
     url: string;
     id: string;
+    tweet_id: string;
   }[];
+  loading?: boolean;
 }
-const Source: React.FC<ISource> = ({ data }) => {
+const Source: React.FC<ISource> = ({ data, loading }) => {
   const [isVisible, setIsVisible] = useState(false);
   return (
     <ThemedView
@@ -25,7 +27,7 @@ const Source: React.FC<ISource> = ({ data }) => {
         <View style={styles.top}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
             <Image
-              source={require("@assets/view-blog/ic-pen-line.png")}
+              source={require("@assets/view-blog/ic-search-2-line.png")}
               style={{ width: 16, height: 16 }}
             />
             <ThemedText>Reference</ThemedText>
@@ -38,14 +40,14 @@ const Source: React.FC<ISource> = ({ data }) => {
               paddingStart: 12,
             }}
           >
-            <GroupAvatar data={data} />
+            <GroupAvatar data={data} loading={loading} />
             <TouchableOpacity
               style={{
                 padding: 4,
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              onPress={() => setIsVisible(!isVisible)}
+              onPress={() => !loading && setIsVisible(!isVisible)}
             >
               <Image
                 source={require("@assets/view-blog/ic-down-line.png")}
@@ -58,9 +60,8 @@ const Source: React.FC<ISource> = ({ data }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <ScrollView horizontal={true}>
-          {data?.length > 0 &&
-            isVisible &&
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {data?.length > 0 && isVisible ? (
             data.map((source, key) => {
               return (
                 <ItemSource
@@ -69,7 +70,10 @@ const Source: React.FC<ISource> = ({ data }) => {
                   key={source.id + key + "item-source"}
                 />
               );
-            })}
+            })
+          ) : (
+            <></>
+          )}
         </ScrollView>
       </ThemedView>
     </ThemedView>

@@ -67,6 +67,7 @@ export interface Cluster {
 
 // Define the main object type
 export interface Blog extends Tweet {
+  name?: string;
   id: string;
   created_at: string;
   updated_at: string;
@@ -88,7 +89,8 @@ export interface Blog extends Tweet {
   tweets: Tweet[];
   total_bull: number;
   total_bear: number;
-  reaction?: 'BULL' | 'BEAR';
+  reaction?: "BULL" | "BEAR";
   total_shared: number;
   slug: string;
+  messages?: any[];
 }

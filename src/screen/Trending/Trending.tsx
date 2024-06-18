@@ -14,9 +14,12 @@ import Animated from "react-native-reanimated";
 import { getBlog } from "./serivce";
 import ParallaxScrollView from "@/src/components/ParallaxScrollView";
 import SkeletonDiscover from "@/src/components/SkeletonDiscover";
+import { useNewBlogs } from "@/src/hooks/useNewBlogs";
+import ViewUnread from "@/src/components/ViewUnread";
 const heightScreen = Dimensions.get("window").height;
 
 export default function Trending() {
+  const { countUnS } = useNewBlogs();
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {
@@ -61,7 +64,7 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 5 });
+    run({ page: 1, take: 10 });
   }, []);
 
   const onNext = () => {
@@ -75,7 +78,7 @@ export default function Trending() {
   };
   const onRefresh = () => {
     setIsRefreshing(true);
-    run({ page: 1, take: 5 });
+    run({ page: 1, take: 10 });
   };
 
   const onUpdateBlogs = (data: Blog, position: number) => {
@@ -86,8 +89,12 @@ export default function Trending() {
       data: newsData,
     } as any);
   };
+
+  console.log(countUnS, "countUnS");
+
   return (
     <ThemedView style={styles.container}>
+      <ViewUnread handleRefresh={onRefresh} />
       {isRefreshing && <ActivityIndicator color={"white"} />}
       {(firstLoading || loadingBlog) && (
         <ParallaxScrollView>
@@ -137,5 +144,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     gap: 16,
+    position: "relative",
   },
 });

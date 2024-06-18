@@ -1,29 +1,36 @@
-import { ThemedText } from "@/src/components/ThemedText";
-import { ThemedView } from "@/src/components/ThemedView";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Dimensions, Image, StyleSheet, TextInput, View } from "react-native";
-import Header from "./Header";
-import { useMount, useRequest } from "ahooks";
-import { getBlogSlugDetail } from "./service";
+import { Colors } from "@/src/constants/Colors";
 import { useDataBlog } from "@/src/hooks/useDataBlog";
 import { Blog, Tweet } from "@/src/utils/blog.utils";
-import Main from "./Main";
-import { Colors } from "@/src/constants/Colors";
-import Source from "./Source";
+import { useMount, useRequest } from "ahooks";
 import { uniqBy } from "lodash";
-import Related from "./Related";
-import ParallaxScrollView from "@/src/components/ParallaxScrollView";
-import HightLight from "./HightLight";
+import React, { useCallback, useMemo } from "react";
+import { Dimensions, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import Header from "./Header";
+import HightLight from "./HightLight";
+import Main from "./Main";
+import Related from "./Related";
+import Source from "./Source";
+import { getBlogSlugDetail, updateBlogViews } from "./service";
+import SkeletonViewBlog from "./SkeletonViewBlog";
+import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
+import InputMessage from "./InputMessage";
+import { TouchViewThread } from "@/app/(tabs)/chat";
+import { View } from "moti";
+import { LinearGradient } from "expo-linear-gradient";
+import { BlurView } from "expo-blur";
 const screenWidth = Dimensions.get("window").width;
+const heightScreen = Dimensions.get("window").height;
 
 export const ViewBlog = ({ slug }: { slug: any }) => {
+  const { getAsyncStorage } = useCustomAsyncStorage();
   const { data, run, loading, mutate } = useRequest(getBlogSlugDetail, {
     manual: true,
-    onSuccess(res: any) {
-      // if (accessToken && res) {
-      //   onUpdateViews(res?.data?.id as string);
-      // }
+    onSuccess: async (res: any) => {
+      const accessToken = await getAsyncStorage("accessToken");
+      if (accessToken && res) {
+        onUpdateViews(res?.data?.id as string);
+      }
     },
   });
   useMount(() => {
@@ -32,7 +39,7 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
 
   const blog = useDataBlog(data?.data);
 
-  // const { run: onUpdateViews } = useRequest(updateBlogViews, { manual: true });
+  const { run: onUpdateViews } = useRequest(updateBlogViews, { manual: true });
   const onUpdateBlogs = useCallback(
     (b: Blog) => {
       mutate({
@@ -42,7 +49,6 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
     },
     [mutate]
   );
-
   const { source = [] } = useMemo(() => {
     if (blog?.cluster?.tweets?.length <= 0)
       return {
@@ -57,6 +63,7 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
               name: tweet?.twitter_user?.name,
               id: tweet?.twitter_user?.id,
               url: tweet?.media[0]?.media_url_https || "",
+              tweet_id: tweet?.tweet_id,
             }))
           : [],
     };
@@ -69,26 +76,45 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
   // const onChangeText = () => {};
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Header blog={blog} onUpdateBlogs={onUpdateBlogs} />
-      <Main blog={blog} onUpdateBlogs={onUpdateBlogs} />
-      {source && <Source data={source} />}
-      <HightLight content={content} />
-      {blog && (
-        <Related related_questions={blog.related_questions} id={blog.id} />
-      )}
-      {/* <View>
-        <TextInput
-          editable
-          multiline
-          numberOfLines={4}
-          maxLength={40}
-          onChangeText={(text) => setMessage(text)}
-          value={message}
-          style={{ padding: 10 }}
-        />
-      </View> */}
-    </ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {loading && (
+          <>
+            <SkeletonViewBlog />
+            <Source data={source} loading={true} />
+            <HightLight content={content} data={source} loading={true} />
+          </>
+        )}
+        {!loading && (
+          <>
+            <Main blog={blog} onUpdateBlogs={onUpdateBlogs} />
+            <Source data={source} loading={loading} />
+            <HightLight content={content} data={source} />
+            {blog && (
+              <Related
+                related_questions={blog.related_questions}
+                id={blog.id}
+              />
+            )}
+          </>
+        )}
+        <View style={{ paddingTop: 96 }} />
+      </ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          // backgroundColor: "#050505",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: 16,
+          paddingBottom: 32,
+        }}
+      >
+        <TouchViewThread placeholder="Ask follow-up..." onPress={() => {}} />
+      </View>
+    </View>
   );
 };
 

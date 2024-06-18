@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { serviceAuthLogin } from "./service";
 WebBrowser.maybeCompleteAuthSession();
 
 const screenWidth = Dimensions.get("window").width;
@@ -39,13 +40,15 @@ export default function HomeScreen() {
     },
     discovery
   );
-  const auth = async (code: string) => {
+  const auth = async (
+    code: string,
+    code_verifier: string,
+    redirect_uri: string
+  ) => {
     setLoading(true);
     try {
-      // const res = await serviceAuthLogin({ code });
-      // "res.data.access_token"
-      const accessToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNmU3MGVhNy1hNGI1LTRhMzUtOTZkNC0yNTI4Mzg3ODdhYzgiLCJpYXQiOjE3MTgyNjQ1MTksImV4cCI6MTcxODg2OTMxOX0.T--U7ZDvu26vfvWV2dl7-q5IsmbJBgdpgiGY8bgPDhY";
+      const res = await serviceAuthLogin({ code, code_verifier, redirect_uri });
+      const accessToken = res.data.access_token;
       if (accessToken) {
         await setAsyncStorage("accessToken", accessToken);
         const profile = await onGetInfo(accessToken);
@@ -63,10 +66,9 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    if (response?.type === "success") {
+    if (response?.type === "success" && request) {
       const { code } = response.params;
-      // console.log(response.params, "response.params");
-      auth(code);
+      auth(code, request?.codeVerifier || "", request?.redirectUri);
     }
   }, [response]);
 

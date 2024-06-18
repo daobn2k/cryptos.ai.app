@@ -1,8 +1,8 @@
-import dayjs from 'dayjs';
-import calendar from 'dayjs/plugin/calendar';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import updateLocale from 'dayjs/plugin/updateLocale';
-import utc from 'dayjs/plugin/utc';
+import dayjs from "dayjs";
+import calendar from "dayjs/plugin/calendar";
+import relativeTime from "dayjs/plugin/relativeTime";
+import updateLocale from "dayjs/plugin/updateLocale";
+import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -10,10 +10,10 @@ dayjs.extend(calendar);
 
 function formatRelativeTime(date: any, t?: any) {
   const now = dayjs();
-  const diffInSeconds = now.diff(date, 'second');
-  const diffInMinutes = now.diff(date, 'minute');
-  const diffInHours = now.diff(date, 'hour');
-  const diffInDays = now.diff(date, 'day');
+  const diffInSeconds = now.diff(date, "second");
+  const diffInMinutes = now.diff(date, "minute");
+  const diffInHours = now.diff(date, "hour");
+  const diffInDays = now.diff(date, "day");
 
   if (diffInSeconds < 60) {
     return `${diffInSeconds}s ago`;
@@ -36,10 +36,10 @@ export const conditionShowTime = (createdAt: string, t?: any) => {
 };
 export const formatNumber = (number: number) => {
   if (number >= 1000) {
-    return (number / 1000).toFixed(1) + 'K';
+    return (number / 1000).toFixed(1) + "K";
   }
   if (number >= 1000000) {
-    return (number / 1000000).toFixed(1) + 'M';
+    return (number / 1000000).toFixed(1) + "M";
   }
   return number?.toString();
 };
@@ -48,14 +48,14 @@ export const adjustHexColor = (hex: string) => {
   // Function to convert HEX to RGB
   const hexToRgb = (hex: string) => {
     // Remove # if present
-    hex = hex.replace(/^#/, '');
+    hex = hex.replace(/^#/, "");
 
     // Convert short hex to full hex
     if (hex.length === 3) {
       hex = hex
-        .split('')
+        .split("")
         .map((char) => char + char)
-        .join('');
+        .join("");
     }
 
     // Parse hex values
@@ -135,7 +135,7 @@ export const adjustHexColor = (hex: string) => {
 
     const toHex = (x: number) => {
       const hex = Math.round(x * 255).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
+      return hex.length === 1 ? "0" + hex : hex;
     };
 
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
@@ -143,3 +143,55 @@ export const adjustHexColor = (hex: string) => {
 
   return hslToHex(h, s, l);
 };
+
+export function highlightNearbyText(
+  inputString: string,
+  callback: (text: string) => void
+) {
+  var regex = /([!@#$%^&*])(\w+)/g;
+
+  var hrefRegex = /<a\b[^>]*>(.*?)<\/a>/gi;
+
+  const updatedHtmlContent = inputString.replace(
+    hrefRegex,
+    function (match, content) {
+      console.log(match, "match");
+      const href = match.split('"');
+      console.log(href, "href");
+      console.log(content, "content");
+
+      return `<a href=${href[1]} style="text-decoration:none;"}>${content}</a>`;
+    }
+  );
+
+  var highlightedString = updatedHtmlContent.replace(
+    regex,
+    function (match, specialChar, nearbyText) {
+      if (checkNumber(nearbyText)) return specialChar + nearbyText;
+      if (specialChar === "@") {
+        const link = callback(nearbyText);
+        return (
+          `
+      <span class="highlight">
+      <a href=${link} style="font-size:16px;font-weight:400;line-height:'160%';color:#bffd17;text-decoration:none;">
+    
+      ` +
+          specialChar +
+          nearbyText +
+          "</a> </span>"
+        );
+      } else {
+        return (
+          '<span class="highlight">' + specialChar + nearbyText + "</span>"
+        );
+      }
+    }
+  );
+  console.log(highlightedString, "highlightedString");
+
+  return highlightedString;
+}
+
+export function checkNumber(value: any) {
+  return !isNaN(value);
+}

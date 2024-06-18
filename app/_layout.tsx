@@ -63,6 +63,10 @@ export default function RootLayout() {
               name="views/[id]"
               options={{ headerShown: false, presentation: "modal" }}
             />
+            <Stack.Screen
+              name="threads/list"
+              options={{ headerShown: false, presentation: "modal" }}
+            />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           </Stack>
         </View>

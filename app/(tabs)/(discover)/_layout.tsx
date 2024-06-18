@@ -1,5 +1,6 @@
 import { ThemedText } from "@/src/components/ThemedText";
 import { Colors } from "@/src/constants/Colors";
+import { useNewBlogs } from "@/src/hooks/useNewBlogs";
 import { useThemeColor } from "@/src/hooks/useThemeColor";
 import {
   MaterialTopTabNavigationEventMap,
@@ -8,6 +9,7 @@ import {
 } from "@react-navigation/material-top-tabs";
 import { ParamListBase, TabNavigationState } from "@react-navigation/native";
 import { withLayoutContext } from "expo-router";
+import { useEffect } from "react";
 import { View } from "react-native";
 
 const { Navigator } = createMaterialTopTabNavigator();
@@ -20,10 +22,20 @@ export const MaterialTopTabs = withLayoutContext<
 >(Navigator);
 
 const TopTabs = () => {
+  const { gUnSeen } = useNewBlogs();
   const background = useThemeColor(
     { light: Colors.light.background, dark: Colors.dark.background },
     "background"
   );
+  useEffect(() => {
+    gUnSeen();
+    const intervalId = setInterval(() => {
+      gUnSeen();
+    }, 10000); // 20 seconds
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
   return (
     <MaterialTopTabs
       screenOptions={{

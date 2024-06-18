@@ -16,12 +16,20 @@ export default function Profile() {
   const { profile } = useProfile();
   const { language, onChangeLanguage } = useLanguage();
   const { removeAsyncStorage } = useCustomAsyncStorage();
+
   const bgTouch = useThemeColor(
     { light: Colors.light["white-a10"], dark: Colors.dark["white-a10"] },
     "white-a10"
   );
 
   const onPressChangeLanguage = () => {};
+
+  const onShowThead = () => {
+    router.push({
+      pathname: "threads/list",
+    });
+  };
+
   const onLogout = async () => {
     await removeAsyncStorage("accessToken");
     router.push("/");
@@ -75,7 +83,7 @@ export default function Profile() {
           />
         </View>
       </View>
-      <View style={styles.thread}>
+      <TouchableOpacity style={styles.thread} onPress={() => onShowThead()}>
         <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
           <Image
             source={require("@assets/profile/ic-book-2-line.png")}
@@ -85,13 +93,13 @@ export default function Profile() {
             Threads
           </ThemedText>
         </View>
-        <TouchableOpacity style={styles.viewThread}>
+        <View style={styles.viewThread}>
           <Image
             source={require("@assets/profile/right-line.png")}
             style={{ width: 24, height: 24 }}
           />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
       <View style={styles.thread}>
         <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
           <Image

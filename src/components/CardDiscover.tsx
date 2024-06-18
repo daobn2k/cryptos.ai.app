@@ -203,7 +203,7 @@ const CardDiscover: React.FC<CardViewProps> = ({
                 onPress={onPressSaved}
                 source={
                   data.is_saved
-                    ? require("@assets/home/active-bookmark-filled.png")
+                    ? require("@assets/view-blog/ic-bookmark-filled.png")
                     : require("@assets/home/home-bookmark-outline.png")
                 }
                 value={formatNumber(data.total_saved)}
@@ -235,7 +235,7 @@ export const ViewAction = ({
   return (
     <TouchableOpacity style={[styles.touch, style]} onPress={onPress}>
       {source && <Image source={source} style={styles.imageAction} />}
-      <ThemedText type="font-12-500" color="white-a80" style={textStyle}>
+      <ThemedText type="font-12-500" color="text-tertiary" style={textStyle}>
         {value}
       </ThemedText>
     </TouchableOpacity>
