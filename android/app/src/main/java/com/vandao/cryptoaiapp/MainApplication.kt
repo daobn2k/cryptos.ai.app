@@ -1,4 +1,4 @@
-package com.vandao2k.cryptoaiapp
+package com.vandao.cryptoaiapp
 
 import android.app.Application
 import android.content.res.Configuration

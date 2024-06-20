@@ -1,10 +1,15 @@
 import { ThemedText } from "@/src/components/ThemedText";
-import React from "react";
+import React, { useMemo } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { ISource } from ".";
 import { Skeleton } from "moti/skeleton";
 
 export const GroupAvatar: React.FC<ISource> = ({ data, loading }) => {
+  const urls = useMemo(() => {
+    return data?.filter((e) => e.url);
+  }, [data]);
+
+  if (urls?.length <= 0 && !loading) return <></>;
   return (
     <View style={styles.list}>
       {!loading && data?.length > 0 ? (
@@ -12,7 +17,7 @@ export const GroupAvatar: React.FC<ISource> = ({ data, loading }) => {
           return (
             <View
               style={[styles.item, { marginLeft: -1 * key + 1 }]}
-              key={e.id + "avatar"}
+              key={key + "group--avatar"}
             >
               <Image
                 source={{

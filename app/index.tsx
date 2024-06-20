@@ -9,6 +9,7 @@ import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Button,
   Dimensions,
   Image,
   StyleSheet,
@@ -16,6 +17,7 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { serviceAuthLogin } from "./service";
+
 WebBrowser.maybeCompleteAuthSession();
 
 const screenWidth = Dimensions.get("window").width;
@@ -30,7 +32,7 @@ export default function HomeScreen() {
   const { onGetInfo } = useProfile();
   const [request, response, promptAsync] = useAuthRequest(
     {
-      clientId: "bnFFRDZkejFtOEd4clR1SlV5M1A6MTpjaQ",
+      clientId: process.env.EXPO_PUBLIC_CLIENT_ID || "",
       redirectUri: makeRedirectUri(),
       usePKCE: true,
       scopes: ["tweet.read", "offline.access", "users.read"],
@@ -178,4 +180,11 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   gif: {},
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    marginTop: 10,
+    marginBottom: 30,
+    justifyContent: "space-between",
+  },
 });

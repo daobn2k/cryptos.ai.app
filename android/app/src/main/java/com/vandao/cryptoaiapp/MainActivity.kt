@@ -1,4 +1,4 @@
-package com.vandao2k.cryptoaiapp
+package com.vandao.cryptoaiapp
 
 import android.os.Build
 import android.os.Bundle

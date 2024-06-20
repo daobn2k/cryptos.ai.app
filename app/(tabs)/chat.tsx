@@ -1,50 +1,88 @@
-import { ThemedText } from "@/src/components/ThemedText";
+import { ThemedText, textStyles } from "@/src/components/ThemedText";
 import { Colors } from "@/src/constants/Colors";
+import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Dimensions, Image, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  Dimensions,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Constants from "expo-constants";
+import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
 const screenWidth = Dimensions.get("window").width;
 
 export default function Chat() {
+  const { getAsyncStorage } = useCustomAsyncStorage();
+  const router = useRouter();
+  const [question, setQuestion] = useState<string>("");
   const insets = useSafeAreaInsets();
-  const onPress = () => {};
+  const [showInput, setShowInput] = useState<boolean>(false);
+
+  const onSendMessage = async () => {
+    const token = await getAsyncStorage("accessToken");
+    if (!question || !token) return;
+    setQuestion("");
+    router.push({
+      pathname: "/threads/new-thread",
+      params: {
+        question,
+      },
+    });
+  };
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: Colors.dark["background-01"],
-        justifyContent: "space-between",
-        paddingBottom: insets.bottom + 56,
-      }}
-    >
-      <View style={{ justifyContent: "center" }}>
+    <>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: Colors.dark["background-01"],
+          justifyContent: "space-between",
+          paddingBottom: insets.bottom + Constants.statusBarHeight,
+        }}
+      >
         <View
-          style={{
-            paddingLeft: 32,
-            paddingRight: 32,
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 24,
-            marginBottom: 32,
-          }}
+          style={{ justifyContent: "center", alignContent: "center", flex: 1 }}
         >
-          <Image
-            source={require("@assets/home/home-page-logo.png")}
-            style={{
-              width: 90,
-              height: 64,
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+              setShowInput(false);
             }}
-          />
-          <ThemedText
-            type="font-heading-xl"
-            color="text-primary"
-            style={{ textAlign: "center" }}
           >
-            Explore the world of Blockchain
-          </ThemedText>
-        </View>
-        <ScrollView
+            <View
+              style={{
+                paddingLeft: 32,
+                paddingRight: 32,
+                alignItems: "center",
+                gap: 24,
+                marginBottom: 32,
+              }}
+            >
+              <Image
+                source={require("@assets/home/home-page-logo.png")}
+                style={{
+                  width: 90,
+                  height: 64,
+                }}
+              />
+              <ThemedText
+                type="font-heading-xl"
+                color="text-primary"
+                style={{ textAlign: "center" }}
+              >
+                Explore the world of Blockchain
+              </ThemedText>
+            </View>
+            {/* <ScrollView
           style={{
             flexDirection: "row",
             gap: 8,
@@ -86,13 +124,66 @@ export default function Chat() {
             <Question text="What are NFTs?" />
             <Question text="What is a smart contract?" />
           </View>
-        </ScrollView>
-      </View>
+        </ScrollView> */}
+          </TouchableWithoutFeedback>
+        </View>
 
-      <View style={{ paddingLeft: 16, paddingRight: 16, position: "relative" }}>
-        <TouchViewThread placeholder="Ask anything" onPress={onPress} />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "position" : "height"}
+          keyboardVerticalOffset={
+            Platform.OS === "ios" ? 16 + Constants.statusBarHeight : 0
+          }
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 8,
+              padding: 16,
+              backgroundColor: Colors.dark["background-02"],
+            }}
+          >
+            <TextInput
+              onFocus={() => setShowInput(true)}
+              multiline
+              numberOfLines={3}
+              style={{
+                ...textStyles["font-16-400"],
+                color: Colors.dark["text-primary"],
+                padding: 0,
+                flex: 1,
+              }}
+              placeholder="Ask follow-up..."
+              selectionColor={Colors.dark["text-link"]}
+              placeholderTextColor={Colors.dark["text-secondary"]}
+              onChangeText={(text) => setQuestion(text)}
+              maxLength={100}
+            />
+            <TouchableOpacity
+              onPress={(event) => {
+                onSendMessage();
+                event.preventDefault();
+                event.stopPropagation();
+              }}
+              style={{ padding: 4 }}
+            >
+              <Image
+                source={
+                  question
+                    ? require("@assets/view-blog/ic-send-fill.png")
+                    : require("@assets/profile/ic-send-meassge.png")
+                }
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
       </View>
-    </View>
+    </>
   );
 }
 

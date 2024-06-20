@@ -8,15 +8,17 @@ import { GroupAvatar } from "./GroupAvatar";
 import { ItemSource } from "./ItemSource";
 export interface ISource {
   data: {
-    name: string;
-    url: string;
-    id: string;
-    tweet_id: string;
+    name?: string;
+    url?: string;
+    link?: string;
+    title?: string;
+    tweet_id?: string;
   }[];
   loading?: boolean;
 }
 const Source: React.FC<ISource> = ({ data, loading }) => {
   const [isVisible, setIsVisible] = useState(false);
+
   return (
     <ThemedView
       style={[styles.root, { backgroundColor: Colors.dark["background-02"] }]}
@@ -40,7 +42,7 @@ const Source: React.FC<ISource> = ({ data, loading }) => {
               paddingStart: 12,
             }}
           >
-            <GroupAvatar data={data} loading={loading} />
+            {!isVisible && <GroupAvatar data={data} loading={loading} />}
             <TouchableOpacity
               style={{
                 padding: 4,
@@ -60,21 +62,23 @@ const Source: React.FC<ISource> = ({ data, loading }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {data?.length > 0 && isVisible ? (
-            data.map((source, key) => {
-              return (
-                <ItemSource
-                  position={key}
-                  data={source}
-                  key={source.id + key + "item-source"}
-                />
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </ScrollView>
+        {isVisible && (
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {data?.length > 0 ? (
+              data.map((source: any, key) => {
+                return (
+                  <ItemSource
+                    position={key}
+                    data={source}
+                    key={source.title + key + "item-source"}
+                  />
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </ScrollView>
+        )}
       </ThemedView>
     </ThemedView>
   );

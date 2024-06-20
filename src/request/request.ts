@@ -12,6 +12,7 @@ type MakeFetchRequestProps = {
   prefix?: string;
   responseType?: "stream";
 };
+export const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 export default async function request(
   props: MakeFetchRequestProps
@@ -29,8 +30,6 @@ export default async function request(
   const { getAsyncStorage } = useCustomAsyncStorage();
 
   let token = (await getAsyncStorage("accessToken")) || "";
-
-  const apiUrl = "https://cryptos-ai-server-dev.uslab.dev";
 
   let url = `${prefix ?? apiUrl}${path}`;
 

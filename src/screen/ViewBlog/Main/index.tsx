@@ -8,7 +8,12 @@ import React, { memo } from "react";
 import { StyleSheet, View } from "react-native";
 import { PropsViewBlog } from "../Header";
 
-const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
+const Main = ({
+  blog,
+  onUpdateBlogs,
+  hiddenAction,
+  question,
+}: PropsViewBlog) => {
   const { onBear, onBull } = useReaction();
   const bgTouch = useThemeColor(
     { light: Colors.light["white-a10"], dark: Colors.dark["white-a10"] },
@@ -16,82 +21,96 @@ const Main = ({ blog, onUpdateBlogs }: PropsViewBlog) => {
   );
 
   const onPressBull = () => {
+    if (!blog) return;
     onBull(blog, onUpdateBlogs);
   };
   const onPressBear = () => {
+    if (!blog) return;
     onBear(blog, onUpdateBlogs);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.viewHead}>
+    <View style={[styles.container, { paddingBottom: hiddenAction ? 0 : 16 }]}>
+      <View
+        style={[
+          styles.viewHead,
+          {
+            paddingBottom: hiddenAction ? 0 : 16,
+            paddingTop: hiddenAction ? 0 : 16,
+          },
+        ]}
+      >
         <ThemedText type="font-heading-xl" color="text-primary">
-          {blog.title}
+          {blog?.title || question}
         </ThemedText>
       </View>
-      <View style={styles.footer}>
-        <View style={[styles.actions, { backgroundColor: bgTouch }]}>
-          <ViewAction
-            onPress={onPressBull}
-            source={
-              blog?.reaction === "BULL"
-                ? require("@assets/home/active-trade-up.png")
-                : require("@assets/view-blog/ic-trade-up.png")
-            }
-            value={formatNumber(blog?.total_bull) || 0}
-            style={
-              blog?.reaction === "BULL" ? styles.touchActive : styles.touch
-            }
-            textStyle={{
-              color:
+      {blog && !hiddenAction ? (
+        <View style={styles.footer}>
+          <View style={[styles.actions, { backgroundColor: bgTouch }]}>
+            <ViewAction
+              onPress={onPressBull}
+              source={
                 blog?.reaction === "BULL"
-                  ? Colors.dark["text-success"]
-                  : Colors.dark["text-secondary"],
-            }}
-          />
-          <View style={styles.lineAbsolute}>
-            {!blog?.reaction && <View style={styles.line} />}
-          </View>
-          <ViewAction
-            onPress={onPressBear}
-            source={
-              blog?.reaction === "BEAR"
-                ? require("@assets/home/active-trade-down.png")
-                : require("@assets/view-blog/ic-trade-down.png")
-            }
-            value={formatNumber(blog?.total_bear) || 0}
-            style={
-              blog?.reaction === "BEAR" ? styles.touchActive : styles.touch
-            }
-            textStyle={{
-              color:
+                  ? require("@assets/home/active-trade-up.png")
+                  : require("@assets/view-blog/ic-trade-up.png")
+              }
+              value={formatNumber(blog?.total_bull) || 0}
+              style={
+                blog?.reaction === "BULL" ? styles.touchActive : styles.touch
+              }
+              textStyle={{
+                color:
+                  blog?.reaction === "BULL"
+                    ? Colors.dark["text-success"]
+                    : Colors.dark["text-secondary"],
+              }}
+            />
+            <View style={styles.lineAbsolute}>
+              {!blog?.reaction && <View style={styles.line} />}
+            </View>
+            <ViewAction
+              onPress={onPressBear}
+              source={
                 blog?.reaction === "BEAR"
-                  ? Colors.dark["text-danger"]
-                  : Colors.dark["text-secondary"],
-            }}
-          />
+                  ? require("@assets/home/active-trade-down.png")
+                  : require("@assets/view-blog/ic-trade-down.png")
+              }
+              value={formatNumber(blog?.total_bear) || 0}
+              style={
+                blog?.reaction === "BEAR" ? styles.touchActive : styles.touch
+              }
+              textStyle={{
+                color:
+                  blog?.reaction === "BEAR"
+                    ? Colors.dark["text-danger"]
+                    : Colors.dark["text-secondary"],
+              }}
+            />
+          </View>
+          <View style={styles.listViews}>
+            <ViewAction
+              source={require("@assets/view-blog/ic-clock-03.png")}
+              value={blog.created_at ? conditionShowTime(blog.created_at) : ""}
+              style={styles.touchView}
+              textStyle={{ color: Colors.dark["text-tertiary"] }}
+            />
+            <ViewAction
+              source={require("@assets/view-blog/ic-share-03.png")}
+              value={formatNumber(blog?.total_shared) || 0}
+              style={styles.touchView}
+              textStyle={{ color: Colors.dark["text-tertiary"] }}
+            />
+            <ViewAction
+              source={require("@assets/view-blog/ic-book-mark-view.png")}
+              value={formatNumber(blog?.total_saved) || 0}
+              style={styles.touchView}
+              textStyle={{ color: Colors.dark["text-tertiary"] }}
+            />
+          </View>
         </View>
-        <View style={styles.listViews}>
-          <ViewAction
-            source={require("@assets/view-blog/ic-clock-03.png")}
-            value={blog.created_at ? conditionShowTime(blog.created_at) : ""}
-            style={styles.touchView}
-            textStyle={{ color: Colors.dark["text-tertiary"] }}
-          />
-          <ViewAction
-            source={require("@assets/view-blog/ic-share-03.png")}
-            value={formatNumber(blog?.total_shared) || 0}
-            style={styles.touchView}
-            textStyle={{ color: Colors.dark["text-tertiary"] }}
-          />
-          <ViewAction
-            source={require("@assets/view-blog/ic-book-mark-view.png")}
-            value={formatNumber(blog?.total_saved) || 0}
-            style={styles.touchView}
-            textStyle={{ color: Colors.dark["text-tertiary"] }}
-          />
-        </View>
-      </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };
@@ -99,6 +118,7 @@ export default memo(Main);
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingBottom: 0,
   },
   viewHead: {
     paddingBottom: 16,

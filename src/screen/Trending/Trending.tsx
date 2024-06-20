@@ -90,11 +90,9 @@ export default function Trending() {
     } as any);
   };
 
-  console.log(countUnS, "countUnS");
-
   return (
     <ThemedView style={styles.container}>
-      <ViewUnread handleRefresh={onRefresh} />
+      {countUnS > 0 && <ViewUnread handleRefresh={onRefresh} />}
       {isRefreshing && <ActivityIndicator color={"white"} />}
       {(firstLoading || loadingBlog) && (
         <ParallaxScrollView>

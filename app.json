@@ -2,10 +2,10 @@
   "expo": {
     "name": "cryptos.ai",
     "slug": "crypto-ai-app",
-    "version": "1.0.6",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
-    "scheme": "com.vandao2k.cryptoaiapp",
+    "scheme": "com.vandao.cryptoaiapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/favicon.png",
@@ -14,15 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vandao2k.cryptoaiapp",
-      "buildNumber": "11"
+      "bundleIdentifier": "com.vandao.cryptoaiapp",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/favicon.png",
         "backgroundColor": "#050505"
       },
-      "package": "com.vandao2k.cryptoaiapp",
+      "package": "com.vandao.cryptoaiapp",
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ]
@@ -45,15 +45,15 @@
         "origin": false
       },
       "eas": {
-        "projectId": "f80c3a3d-5a75-41eb-ba26-df1812f13b34"
+        "projectId": "497c2b2f-6fcd-445a-b161-4385f0ac2c8d"
       }
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
-      "url": "https://u.expo.dev/f80c3a3d-5a75-41eb-ba26-df1812f13b34"
+      "url": "https://u.expo.dev/497c2b2f-6fcd-445a-b161-4385f0ac2c8d"
     },
-    "runtimeVersion": "1.0.6"
+    "runtimeVersion": "1.0.0"
   }
 }

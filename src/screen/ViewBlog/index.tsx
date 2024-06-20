@@ -1,28 +1,25 @@
+import { TouchViewThread } from "@/app/(tabs)/chat";
 import { Colors } from "@/src/constants/Colors";
+import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
 import { useDataBlog } from "@/src/hooks/useDataBlog";
 import { Blog, Tweet } from "@/src/utils/blog.utils";
 import { useMount, useRequest } from "ahooks";
 import { uniqBy } from "lodash";
+import { View } from "moti";
 import React, { useCallback, useMemo } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Header from "./Header";
 import HightLight from "./HightLight";
 import Main from "./Main";
 import Related from "./Related";
+import SkeletonViewBlog from "./SkeletonViewBlog";
 import Source from "./Source";
 import { getBlogSlugDetail, updateBlogViews } from "./service";
-import SkeletonViewBlog from "./SkeletonViewBlog";
-import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
-import InputMessage from "./InputMessage";
-import { TouchViewThread } from "@/app/(tabs)/chat";
-import { View } from "moti";
-import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
-const screenWidth = Dimensions.get("window").width;
-const heightScreen = Dimensions.get("window").height;
+import { useRouter } from "expo-router";
 
 export const ViewBlog = ({ slug }: { slug: any }) => {
+  const router = useRouter();
   const { getAsyncStorage } = useCustomAsyncStorage();
   const { data, run, loading, mutate } = useRequest(getBlogSlugDetail, {
     manual: true,
@@ -60,10 +57,10 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
       source:
         tweet?.length > 0
           ? tweet?.map((tweet: Tweet) => ({
+              title: tweet?.content,
               name: tweet?.twitter_user?.name,
-              id: tweet?.twitter_user?.id,
               url: tweet?.media[0]?.media_url_https || "",
-              tweet_id: tweet?.tweet_id,
+              link: `https://x.com/x/status/${tweet?.tweet_id}`,
             }))
           : [],
     };
@@ -72,9 +69,15 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
   const content = useMemo(() => {
     return blog.content;
   }, [blog.content]);
-  // const [message, setMessage] = useState("");
-  // const onChangeText = () => {};
-
+  const onPressRelated = (relate: string, blog_id?: string) => {
+    router.push({
+      pathname: "/threads/new-thread",
+      params: {
+        question: relate,
+        blog_id,
+      },
+    });
+  };
   return (
     <View style={styles.container}>
       <Header blog={blog} onUpdateBlogs={onUpdateBlogs} />
@@ -84,6 +87,7 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
             <SkeletonViewBlog />
             <Source data={source} loading={true} />
             <HightLight content={content} data={source} loading={true} />
+            <Related loading={true} />
           </>
         )}
         {!loading && (
@@ -95,6 +99,7 @@ export const ViewBlog = ({ slug }: { slug: any }) => {
               <Related
                 related_questions={blog.related_questions}
                 id={blog.id}
+                onPressRelated={onPressRelated}
               />
             )}
           </>

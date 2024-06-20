@@ -1,17 +1,14 @@
-import { ViewAction } from "@/src/components/CardDiscover";
 import { ThemedText } from "@/src/components/ThemedText";
-import { ThemedView } from "@/src/components/ThemedView";
 import { Colors } from "@/src/constants/Colors";
 import { Blog } from "@/src/utils/blog.utils";
-import { conditionShowTime, formatNumber } from "@/src/utils/fc.untils";
 import { useMount, useRequest } from "ahooks";
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
 import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getThread } from "./service";
 import CardThread from "./CardThread";
 import SkeletonThread from "./SkeletonThread";
+import { getThread } from "./service";
 
 export const MyThreads = () => {
   const router = useRouter();
@@ -28,7 +25,7 @@ export const MyThreads = () => {
     run(
       {
         page: 1,
-        take: 20,
+        take: 10,
       },
       tab
     );
@@ -43,7 +40,7 @@ export const MyThreads = () => {
     run(
       {
         page: 1,
-        take: 20,
+        take: 10,
       },
       tab
     );
@@ -168,6 +165,7 @@ export const MyThreads = () => {
                 updateBlog={onUpdateBlogs}
                 position={position}
                 tab={tab}
+                key={tab + position}
               />
             );
           })}

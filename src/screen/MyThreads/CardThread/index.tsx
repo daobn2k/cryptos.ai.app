@@ -8,8 +8,10 @@ import { useShare } from "@/src/hooks/useShare";
 import { useThemeColor } from "@/src/hooks/useThemeColor";
 import { Blog } from "@/src/utils/blog.utils";
 import { conditionShowTime, formatNumber } from "@/src/utils/fc.untils";
+import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { Image, StyleSheet, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function CardThread({
   data,
@@ -22,6 +24,7 @@ export default function CardThread({
   position: number;
   tab: "thread" | "saved";
 }) {
+  const router = useRouter();
   const blog = useDataBlog(data);
   const { onClickSaved } = useSaved();
   const { onShare } = useShare();
@@ -43,6 +46,26 @@ export default function CardThread({
     onShare(blog, updateBlog, position);
   };
 
+  const onPressView = () => {
+    if (tab === "thread") {
+      router.push({
+        pathname: "/threads/new-thread",
+        params: {
+          thread_id: blog.id,
+          question: blog.title,
+        },
+      });
+    }
+    if (tab === "saved") {
+      router.push({
+        pathname: "/views/[id]",
+        params: {
+          id: blog.slug,
+        },
+      });
+    }
+  };
+
   const url = useMemo(() => {
     return blog?.messages?.[0]?.images?.[0] || blog.image_url;
   }, [blog]);
@@ -55,7 +78,10 @@ export default function CardThread({
         paddingBottom: 16,
       }}
     >
-      <View style={{ flexDirection: "row", gap: 16 }}>
+      <TouchableOpacity
+        style={{ flexDirection: "row", gap: 16 }}
+        onPress={() => onPressView()}
+      >
         <View style={{ flex: 1 }}>
           <ThemedText type="font-16-500" color="text-primary">
             {blog?.name || blog.title}
@@ -64,6 +90,7 @@ export default function CardThread({
             type="font-body-sm"
             color="text-tertiary"
             style={{ marginTop: 4 }}
+            numberOfLines={3}
           >
             {blog?.messages?.[0]?.content || blog.description}
           </ThemedText>
@@ -76,8 +103,7 @@ export default function CardThread({
             style={{ borderRadius: 8, resizeMode: "cover" }}
           />
         )}
-      </View>
-
+      </TouchableOpacity>
       <View style={styles.footer}>
         {tab === "saved" && (
           <View style={[styles.actions, { backgroundColor: bgTouch }]}>

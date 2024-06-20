@@ -150,21 +150,17 @@ export function highlightNearbyText(
 ) {
   var regex = /([!@#$%^&*])(\w+)/g;
 
-  var hrefRegex = /<a\b[^>]*>(.*?)<\/a>/gi;
+  // var hrefRegex = /<a\b[^>]*>(.*?)<\/a>/gi;
 
-  const updatedHtmlContent = inputString.replace(
-    hrefRegex,
-    function (match, content) {
-      console.log(match, "match");
-      const href = match.split('"');
-      console.log(href, "href");
-      console.log(content, "content");
+  // const updatedHtmlContent = inputString.replace(
+  //   hrefRegex,
+  //   function (match, content) {
+  //     const href = match.split('"');
+  //     return `<a href=${href[1]} style="text-decoration:none;"}>${content}</a>`;
+  //   }
+  // );
 
-      return `<a href=${href[1]} style="text-decoration:none;"}>${content}</a>`;
-    }
-  );
-
-  var highlightedString = updatedHtmlContent.replace(
+  var highlightedString = inputString.replace(
     regex,
     function (match, specialChar, nearbyText) {
       if (checkNumber(nearbyText)) return specialChar + nearbyText;
@@ -187,8 +183,6 @@ export function highlightNearbyText(
       }
     }
   );
-  console.log(highlightedString, "highlightedString");
-
   return highlightedString;
 }
 

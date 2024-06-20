@@ -4,21 +4,24 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Redirect, Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
-
 import UpdateCheck from "@/src/components/UpdateCheck";
 import { Colors } from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/hooks/useColorScheme";
 import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import "react-native-polyfill-globals/auto";
+import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const router = useRouter();
+  const { getAsyncStorage } = useCustomAsyncStorage();
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     Aspekta: require("../assets/fonts/Aspekta-400.ttf"),
@@ -29,6 +32,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+
+      checkAuth();
     }
   }, [loaded]);
 
@@ -44,6 +49,12 @@ export default function RootLayout() {
   );
   const insets = useSafeAreaInsets();
 
+  const checkAuth = async () => {
+    const token = await getAsyncStorage("accessToken");
+    if (token) {
+      router.replace("/trending");
+    }
+  };
   return (
     <GestureHandlerRootView>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -65,6 +76,10 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="threads/list"
+              options={{ headerShown: false, presentation: "modal" }}
+            />
+            <Stack.Screen
+              name="threads/new-thread"
               options={{ headerShown: false, presentation: "modal" }}
             />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

@@ -28,11 +28,18 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
     return fText;
   }, [content]);
 
-  console.log(textContents, "textContents");
-
+  const urls = useMemo(() => {
+    return data?.length ? data?.filter((e) => e.url) : [];
+  }, []);
   return (
     <ThemedView
-      style={[styles.root, { backgroundColor: Colors.dark["background-02"] }]}
+      style={[
+        styles.root,
+        {
+          backgroundColor: Colors.dark["background-02"],
+          paddingTop: data?.length > 0 ? 0 : 16,
+        },
+      ]}
     >
       <View
         style={{
@@ -48,10 +55,9 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
         </ThemedText>
       </View>
       <View style={{ marginBottom: 16, marginTop: 16 }}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {!loading &&
-            data?.length > 0 &&
-            data.map((source, key) => {
+        {!loading && urls?.length > 0 && (
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {urls.map((source, key) => {
               return (
                 <View key={key + "highlight-image"} style={{ marginRight: 8 }}>
                   <Image
@@ -63,20 +69,21 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
                 </View>
               );
             })}
-          {loading && (
-            <>
-              <View style={{ marginRight: 8 }}>
-                <Skeleton width={144} height={128} radius={8} />
-              </View>
-              <View style={{ marginRight: 8 }}>
-                <Skeleton width={144} height={128} radius={8} />
-              </View>
-              <View style={{ marginRight: 8 }}>
-                <Skeleton width={144} height={128} radius={8} />
-              </View>
-            </>
-          )}
-        </ScrollView>
+          </ScrollView>
+        )}
+        {loading && (
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <View style={{ marginRight: 8 }}>
+              <Skeleton width={144} height={128} radius={8} />
+            </View>
+            <View style={{ marginRight: 8 }}>
+              <Skeleton width={144} height={128} radius={8} />
+            </View>
+            <View style={{ marginRight: 8 }}>
+              <Skeleton width={144} height={128} radius={8} />
+            </View>
+          </ScrollView>
+        )}
         {loading && (
           <View style={{ gap: 8, paddingTop: 8, paddingBottom: 8 }}>
             <Skeleton width={screenWidth - 32} height={16} />
@@ -89,12 +96,26 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
             source={{ html: textContents }}
             contentWidth={screenWidth - 32}
             tagsStyles={{
-              p: {
+              body: {
                 ...textStyles["font-16-500"],
                 color: Colors.dark["text-primary"],
               },
+              p: {
+                ...textStyles["font-16-500"],
+                color: Colors.dark["text-primary"],
+                margin: 0,
+                padding: 0,
+              },
+              span: {
+                margin: 0,
+              },
               a: {
-                ...textStyles["font-11-500"],
+                ...textStyles["font-16-500"],
+                color: Colors.dark["text-link"],
+                textDecorationLine: "none",
+              },
+              li: {
+                ...textStyles["font-16-500"],
                 color: Colors.dark["text-primary"],
               },
             }}

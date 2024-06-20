@@ -11,48 +11,64 @@ import { useRouter } from "expo-router";
 import { Colors } from "@/src/constants/Colors";
 
 export interface PropsViewBlog {
-  blog: Blog;
-  onUpdateBlogs: (data: Blog) => void;
+  blog?: Blog;
+  onUpdateBlogs?: (data: Blog) => void;
+  title?: string;
+  hiddenAction?: boolean;
+  question?: string;
 }
 
-const Header: React.FC<PropsViewBlog> = ({ blog, onUpdateBlogs }) => {
+const Header: React.FC<PropsViewBlog> = ({
+  blog,
+  onUpdateBlogs,
+  title,
+  hiddenAction,
+}) => {
   const { onClickSaved } = useSaved();
   const { onShare } = useShare();
   const router = useRouter();
   const onPressSaved = () => {
+    if (!blog) return;
     onClickSaved(blog, onUpdateBlogs);
   };
   const onPressShare = () => {
+    if (!blog) return;
     onShare(blog, onUpdateBlogs);
   };
   return (
     <ThemedView style={styles.container}>
-      <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-        <Image
-          source={require("@assets/images/ic-close-line.png")}
-          style={styles.icBack}
-        />
-      </TouchableOpacity>
+      <View style={styles.back}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Image
+            source={require("@assets/images/ic-close-line.png")}
+            style={styles.icBack}
+          />
+        </TouchableOpacity>
+      </View>
       <ThemedText color="text-primary" type="font-18-500">
-        Post
+        {title || "Post"}
       </ThemedText>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.action} onPress={onPressSaved}>
-          <Image
-            source={
-              blog.is_saved
-                ? require("@assets/view-blog/ic-bookmark-filled.png")
-                : require("@assets/view-blog/ic-bookmark.png")
-            }
-            style={styles.icAction}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.action} onPress={onPressShare}>
-          <Image
-            source={require("@assets/view-blog/ic-share-2-line.png")}
-            style={styles.icAction}
-          />
-        </TouchableOpacity>
+        {!hiddenAction && (
+          <>
+            <TouchableOpacity style={styles.action} onPress={onPressSaved}>
+              <Image
+                source={
+                  blog?.is_saved
+                    ? require("@assets/view-blog/ic-bookmark-filled.png")
+                    : require("@assets/view-blog/ic-bookmark.png")
+                }
+                style={styles.icAction}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.action} onPress={onPressShare}>
+              <Image
+                source={require("@assets/view-blog/ic-share-2-line.png")}
+                style={styles.icAction}
+              />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </ThemedView>
   );
@@ -64,19 +80,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.dark["background-02"],
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 16,
+    paddingBottom: 16,
     paddingLeft: 16,
     paddingRight: 16,
     borderBottomWidth: 1,
     borderStyle: "solid",
     borderColor: Colors.dark["border-1"],
+    position: "relative",
+    justifyContent: "center",
   },
   back: {
     padding: 4,
     alignItems: "center",
     justifyContent: "center",
+    position: "absolute",
+    left: 16,
   },
   icBack: {
     width: 24,
@@ -84,6 +103,8 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: "row",
+    position: "absolute",
+    right: 16,
   },
   action: {
     padding: 4,

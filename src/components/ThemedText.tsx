@@ -13,6 +13,7 @@ export function ThemedText({
   style,
   color = "text-primary",
   type,
+  numberOfLines,
   ...rest
 }: ThemedTextProps) {
   const theme = useColorScheme();
@@ -23,6 +24,7 @@ export function ThemedText({
 
   return (
     <Text
+      numberOfLines={numberOfLines}
       style={[{ color: colorText }, type && textStyles[type], style]}
       {...rest}
     />
@@ -104,6 +106,7 @@ export const textStyles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Aspekta",
     lineHeight: 25.6,
+    padding: 0,
   },
   "font-16-500": {
     fontSize: 16, // 1rem = 16px

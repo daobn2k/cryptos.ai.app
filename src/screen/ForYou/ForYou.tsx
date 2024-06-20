@@ -58,7 +58,7 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 5 });
+    run({ page: 1, take: 10 });
   }, []);
 
   const onNext = () => {
@@ -72,7 +72,7 @@ export default function Trending() {
   };
   const onRefresh = () => {
     setIsRefreshing(true);
-    run({ page: 1, take: 5 });
+    run({ page: 1, take: 10 });
   };
 
   const onUpdateBlogs = (data: Blog, position: number) => {
