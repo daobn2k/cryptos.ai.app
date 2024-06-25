@@ -1,5 +1,7 @@
 import { ThemedText, textStyles } from "@/src/components/ThemedText";
 import { Colors } from "@/src/constants/Colors";
+import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
+import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -12,15 +14,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Constants from "expo-constants";
-import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
-const screenWidth = Dimensions.get("window").width;
-
+export const stylesFocus = {
+  borderRadius: 999,
+  height: 48,
+  marginLeft: 16,
+  marginRight: 16,
+  paddingLeft: 16,
+  paddingRight: 16,
+};
 export default function Chat() {
   const { getAsyncStorage } = useCustomAsyncStorage();
   const router = useRouter();
@@ -32,6 +35,7 @@ export default function Chat() {
     const token = await getAsyncStorage("accessToken");
     if (!question || !token) return;
     setQuestion("");
+    setShowInput(false);
     router.push({
       pathname: "/threads/new-thread",
       params: {
@@ -39,6 +43,7 @@ export default function Chat() {
       },
     });
   };
+
   return (
     <>
       <View
@@ -135,14 +140,20 @@ export default function Chat() {
           }
         >
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 8,
-              padding: 16,
-              backgroundColor: Colors.dark["background-02"],
-            }}
+            style={[
+              {
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 8,
+                backgroundColor: Colors.dark["background-02"],
+              },
+              !showInput
+                ? stylesFocus
+                : {
+                    padding: 16,
+                  },
+            ]}
           >
             <TextInput
               onFocus={() => setShowInput(true)}
@@ -159,6 +170,7 @@ export default function Chat() {
               placeholderTextColor={Colors.dark["text-secondary"]}
               onChangeText={(text) => setQuestion(text)}
               maxLength={100}
+              value={question}
             />
             <TouchableOpacity
               onPress={(event) => {

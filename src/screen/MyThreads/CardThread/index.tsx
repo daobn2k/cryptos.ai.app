@@ -61,6 +61,7 @@ export default function CardThread({
         pathname: "/views/[id]",
         params: {
           id: blog.slug,
+          blog_id: blog.id,
         },
       });
     }

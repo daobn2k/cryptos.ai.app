@@ -32,6 +32,7 @@ const Related: React.FC<IRelated> = ({
           gap: 4,
           alignItems: "center",
           marginBottom: 16,
+          marginTop: 16,
         }}
       >
         <Image source={require("@assets/view-blog/ic-compass.png")} />
@@ -74,7 +75,7 @@ const Related: React.FC<IRelated> = ({
                     color="text-primary"
                     style={{ flex: 1 }}
                   >
-                    {r}
+                    {r || ""}
                   </ThemedText>
                   <Image
                     source={require("@assets/view-blog/arrow_right_up_line.png")}

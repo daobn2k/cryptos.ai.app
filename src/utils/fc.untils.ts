@@ -150,31 +150,31 @@ export function highlightNearbyText(
 ) {
   var regex = /([!@#$%^&*])(\w+)/g;
 
-  // var hrefRegex = /<a\b[^>]*>(.*?)<\/a>/gi;
+  var hrefRegex = /<a\b[^>]*>(.*?)<\/a>/gi;
 
-  // const updatedHtmlContent = inputString.replace(
-  //   hrefRegex,
-  //   function (match, content) {
-  //     const href = match.split('"');
-  //     return `<a href=${href[1]} style="text-decoration:none;"}>${content}</a>`;
-  //   }
-  // );
+  const updatedHtmlContent = inputString.replace(
+    hrefRegex,
+    function (match, content) {
+      const href = match.split('"');
+      return `
+      <a href=${href[1]} class="text-link">
+      ${content}
+      </a>
+      `;
+    }
+  );
 
-  var highlightedString = inputString.replace(
+  var highlightedString = updatedHtmlContent.replace(
     regex,
     function (match, specialChar, nearbyText) {
       if (checkNumber(nearbyText)) return specialChar + nearbyText;
       if (specialChar === "@") {
         const link = callback(nearbyText);
         return (
-          `
-      <span class="highlight">
-      <a href=${link} style="font-size:16px;font-weight:400;line-height:'160%';color:#bffd17;text-decoration:none;">
-    
-      ` +
+          `<a href=${link} style="font-size:16px;font-weight:400;line-height:'160%';color:#bffd17;text-decoration:none;">` +
           specialChar +
           nearbyText +
-          "</a> </span>"
+          "</a> "
         );
       } else {
         return (

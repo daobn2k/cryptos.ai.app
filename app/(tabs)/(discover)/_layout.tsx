@@ -144,7 +144,3 @@ const TopTabs = () => {
 };
 
 export default TopTabs;
-
-const TabLabelCustom = () => {
-  return;
-};

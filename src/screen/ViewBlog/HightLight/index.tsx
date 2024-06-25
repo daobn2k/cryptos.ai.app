@@ -1,14 +1,15 @@
 import { ThemedText, textStyles } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
+import { Colors } from "@/src/constants/Colors";
+import { highlightNearbyText } from "@/src/utils/fc.untils";
+import { isEmpty } from "lodash";
+import { Skeleton } from "moti/skeleton";
 import React, { useMemo } from "react";
 import { Dimensions, Image, StyleSheet, View } from "react-native";
-import { ISource } from "../Source";
 import { ScrollView } from "react-native-gesture-handler";
-import { Skeleton } from "moti/skeleton";
-import RenderHtml, { RenderHTML } from "react-native-render-html";
+import RenderHtml from "react-native-render-html";
 import showdown from "showdown";
-import { highlightNearbyText } from "@/src/utils/fc.untils";
-import { Colors } from "@/src/constants/Colors";
+import { ISource } from "../Source";
 const screenWidth = Dimensions.get("window").width;
 
 export interface IHightLight extends ISource {
@@ -22,6 +23,7 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
   };
   const textContents = useMemo(() => {
     const s = new showdown.Converter();
+    if (isEmpty(content)) return "";
     const textFormat = s.makeHtml(content);
     if (!textFormat) return "";
     const fText = highlightNearbyText(textFormat as string, getLink);
@@ -31,6 +33,9 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
   const urls = useMemo(() => {
     return data?.length ? data?.filter((e) => e.url) : [];
   }, []);
+
+  console.log(textContents, "textContents");
+
   return (
     <ThemedView
       style={[
@@ -54,7 +59,7 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
           HightLight
         </ThemedText>
       </View>
-      <View style={{ marginBottom: 16, marginTop: 16 }}>
+      <View>
         {!loading && urls?.length > 0 && (
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {urls.map((source, key) => {
@@ -91,10 +96,22 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
             <Skeleton width={screenWidth - 64} height={16} />
           </View>
         )}
-        {!loading && (
-          <RenderHTML
-            source={{ html: textContents }}
+        {!loading && !isEmpty(textContents) && (
+          <RenderHtml
+            source={{
+              html: textContents,
+            }}
             contentWidth={screenWidth - 32}
+            baseStyle={{ marginTop: urls?.length > 0 ? 16 : 0 }}
+            classesStyles={{
+              "text-link": {
+                ...textStyles["font-12-500"],
+                backgroundColor: "red",
+                padding: 4,
+                textDecorationLine: "none",
+                color: Colors.dark["text-primary"],
+              },
+            }}
             tagsStyles={{
               body: {
                 ...textStyles["font-16-500"],
@@ -108,11 +125,6 @@ const HightLight: React.FC<IHightLight> = ({ content, data, loading }) => {
               },
               span: {
                 margin: 0,
-              },
-              a: {
-                ...textStyles["font-16-500"],
-                color: Colors.dark["text-link"],
-                textDecorationLine: "none",
               },
               li: {
                 ...textStyles["font-16-500"],
@@ -135,5 +147,13 @@ const styles = StyleSheet.create({
   root: {
     paddingRight: 16,
     paddingLeft: 16,
+  },
+  styledSpan: {
+    backgroundColor: "red",
+    paddingVertical: 4,
+    paddingHorizontal: 7,
+    borderRadius: 10,
+    overflow: "hidden",
+    color: "white",
   },
 });

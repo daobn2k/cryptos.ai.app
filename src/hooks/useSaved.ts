@@ -1,6 +1,7 @@
-import { useRequest } from 'ahooks';
-import { Blog } from '../utils/blog.utils';
-import { deleteBlogSaved, updateBlogSaved } from '../screen/Trending/serivce';
+import { useRequest } from "ahooks";
+import { Blog } from "../utils/blog.utils";
+import { deleteBlogSaved, updateBlogSaved } from "../screen/Trending/serivce";
+import Toast from "react-native-toast-message";
 
 export const useSaved = () => {
   const { runAsync } = useRequest(updateBlogSaved, { manual: true });
@@ -18,7 +19,12 @@ export const useSaved = () => {
     }
 
     if (item.is_saved) {
-      //   onOpen({ title: "You’re unsaved thread" });
+      Toast.show({
+        type: "notification",
+        position: "bottom",
+        bottomOffset: 96,
+        props: { text: "You’re unsaved thread", uuid: "Unsaved" },
+      });
       const data: Blog = {
         ...item,
         is_saved: false,
@@ -27,7 +33,12 @@ export const useSaved = () => {
       callback && callback(data, position);
       await deleteSaved(item.id);
     } else {
-      //   onOpen({ title: "You’re saved thread" });
+      Toast.show({
+        type: "notification",
+        position: "bottom",
+        bottomOffset: 96,
+        props: { text: "You’re saved thread", uuid: "Saved" },
+      });
       const data: Blog = {
         ...item,
         is_saved: true,

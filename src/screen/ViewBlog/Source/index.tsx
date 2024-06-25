@@ -2,10 +2,11 @@ import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
 import { Colors } from "@/src/constants/Colors";
 import React, { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { GroupAvatar } from "./GroupAvatar";
 import { ItemSource } from "./ItemSource";
+import { isEmpty } from "lodash";
 export interface ISource {
   data: {
     name?: string;
@@ -19,6 +20,7 @@ export interface ISource {
 const Source: React.FC<ISource> = ({ data, loading }) => {
   const [isVisible, setIsVisible] = useState(false);
 
+  if (!loading && data?.length <= 0) return false;
   return (
     <ThemedView
       style={[styles.root, { backgroundColor: Colors.dark["background-02"] }]}
@@ -34,23 +36,25 @@ const Source: React.FC<ISource> = ({ data, loading }) => {
             />
             <ThemedText>Reference</ThemedText>
           </View>
-          <View
+          <TouchableOpacity
             style={{
-              flexDirection: "row",
+              flex: 1,
+              padding: 4,
               alignItems: "center",
-              gap: 4,
-              paddingStart: 12,
+              justifyContent: "center",
             }}
+            onPress={() => !loading && setIsVisible(!isVisible)}
           >
-            {!isVisible && <GroupAvatar data={data} loading={loading} />}
-            <TouchableOpacity
+            <View
               style={{
-                padding: 4,
+                flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "center",
+                gap: 4,
+                paddingStart: 12,
               }}
-              onPress={() => !loading && setIsVisible(!isVisible)}
             >
+              {!isVisible && <GroupAvatar data={data} loading={loading} />}
+
               <Image
                 source={require("@assets/view-blog/ic-down-line.png")}
                 style={{
@@ -59,8 +63,8 @@ const Source: React.FC<ISource> = ({ data, loading }) => {
                   transform: [{ rotate: isVisible ? "180deg" : "0deg" }],
                 }}
               />
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
         {isVisible && (
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

@@ -36,6 +36,7 @@ const CardDiscover: React.FC<CardViewProps> = ({
   const { onClickSaved } = useSaved();
   const { onShare } = useShare();
   const { onBear, onBull } = useReaction();
+
   const data = useDataBlog(blog);
   const bgContainer = useThemeColor(
     {
@@ -79,10 +80,10 @@ const CardDiscover: React.FC<CardViewProps> = ({
       pathname: "/views/[id]",
       params: {
         id: data.slug,
+        blog_id: data.id,
       },
     });
   };
-
   return (
     <LinearGradient
       colors={[
@@ -93,7 +94,7 @@ const CardDiscover: React.FC<CardViewProps> = ({
       style={{
         ...styles.container,
         backgroundColor: color ? String(color) : bgContainer,
-        minHeight: heightScreen - 300,
+        minHeight: heightScreen - 284,
       }}
     >
       <TouchableOpacity onPress={onPressViewBlog}>
@@ -125,18 +126,15 @@ const CardDiscover: React.FC<CardViewProps> = ({
           />
         </View>
       </TouchableOpacity>
-
       <View style={styles.main}>
-        <TouchableOpacity onPress={onPressViewBlog}>
-          <View style={styles.top}>
-            <ThemedText type="font-heading-lg" color="white-a100">
-              {data.title}
-            </ThemedText>
-            <ThemedText type="font-body-md" color="white-a80">
-              {data.description}
-            </ThemedText>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.top}>
+          <ThemedText type="font-heading-lg" color="white-a100">
+            {data.title}
+          </ThemedText>
+          <ThemedText type="font-body-md" color="white-a80">
+            {data.description}
+          </ThemedText>
+        </View>
         <View
           style={{
             flex: 1,

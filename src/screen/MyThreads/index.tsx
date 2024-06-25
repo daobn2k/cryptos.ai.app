@@ -25,7 +25,7 @@ export const MyThreads = () => {
     run(
       {
         page: 1,
-        take: 10,
+        take: 20,
       },
       tab
     );
@@ -40,7 +40,7 @@ export const MyThreads = () => {
     run(
       {
         page: 1,
-        take: 10,
+        take: 20,
       },
       tab
     );

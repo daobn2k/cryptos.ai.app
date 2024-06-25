@@ -6,7 +6,13 @@ import { Colors } from "../constants/Colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNewBlogs } from "../hooks/useNewBlogs";
 
-const ViewUnread = ({ handleRefresh }: { handleRefresh: () => void }) => {
+const ViewUnread = ({
+  handleRefresh,
+  refList,
+}: {
+  handleRefresh: () => void;
+  refList: any;
+}) => {
   const { countUnS, seenNews } = useNewBlogs();
   if (!countUnS) return <></>;
   return (
@@ -23,7 +29,10 @@ const ViewUnread = ({ handleRefresh }: { handleRefresh: () => void }) => {
       }}
     >
       <TouchableOpacity
-        onPress={() => seenNews(handleRefresh)}
+        onPress={() => {
+          refList?.current?.snapToItem(0);
+          seenNews(handleRefresh);
+        }}
         style={{
           paddingTop: 8,
           paddingBottom: 8,

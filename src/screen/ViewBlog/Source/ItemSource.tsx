@@ -14,7 +14,7 @@ export const ItemSource: React.FC<IItemSource> = ({ data, position }) => {
   return (
     <Pressable onPress={onPress} style={styles.itemBottom}>
       <ThemedText color="text-primary" type="font-heading-xs" numberOfLines={2}>
-        {data?.title}
+        {data?.title || ""}
       </ThemedText>
       <View
         style={{

@@ -42,5 +42,6 @@ export const useNewBlogs = () => {
     seenNews,
     countUnS,
     gUnSeen,
+    setCountUnS,
   };
 };

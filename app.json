@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.vandao.cryptoaiapp",
-      "buildNumber": "2"
+      "buildNumber": "7"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +35,8 @@
     "plugins": [
       "expo-router",
       "expo-image-picker",
-      "expo-font"
+      "expo-font",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
@@ -45,15 +46,16 @@
         "origin": false
       },
       "eas": {
-        "projectId": "497c2b2f-6fcd-445a-b161-4385f0ac2c8d"
+        "projectId": "58350da3-85b4-4413-8b1c-363972cecdc8"
       }
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
-      "url": "https://u.expo.dev/497c2b2f-6fcd-445a-b161-4385f0ac2c8d"
+      "url": "https://u.expo.dev/58350da3-85b4-4413-8b1c-363972cecdc8"
     },
-    "runtimeVersion": "1.0.0"
+    "runtimeVersion": "1.0.0",
+    "owner": "vvdao2k"
   }
 }

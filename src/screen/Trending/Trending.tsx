@@ -1,27 +1,31 @@
 import CardDiscover from "@/src/components/CardDiscover";
+import ParallaxScrollView from "@/src/components/ParallaxScrollView";
+import SkeletonDiscover from "@/src/components/SkeletonDiscover";
 import { ThemedView } from "@/src/components/ThemedView";
+import ViewUnread from "@/src/components/ViewUnread";
+import { useNewBlogs } from "@/src/hooks/useNewBlogs";
 import { Blog } from "@/src/utils/blog.utils";
 import { useRequest } from "ahooks";
+import * as Haptics from "expo-haptics";
 import { uniqBy } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   RefreshControl,
   StyleSheet,
 } from "react-native";
-import Animated from "react-native-reanimated";
+import Carousel from "react-native-snap-carousel";
 import { getBlog } from "./serivce";
-import ParallaxScrollView from "@/src/components/ParallaxScrollView";
-import SkeletonDiscover from "@/src/components/SkeletonDiscover";
-import { useNewBlogs } from "@/src/hooks/useNewBlogs";
-import ViewUnread from "@/src/components/ViewUnread";
+
 const heightScreen = Dimensions.get("window").height;
 
 export default function Trending() {
-  const { countUnS } = useNewBlogs();
+  const refFlatList = useRef<any>();
+  const { countUnS, setCountUnS } = useNewBlogs();
   const [firstLoading, setFirstLoading] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [showCountUs, setShowCounts] = useState<boolean>(false);
   const {
     data: dataBlog,
     loading: loadingBlog,
@@ -32,6 +36,10 @@ export default function Trending() {
     onSuccess(res) {
       setIsRefreshing(false);
       setFirstLoading(false);
+      setCountUnS(0);
+      setTimeout(() => {
+        setShowCounts(true);
+      }, 3000);
     },
     onError() {
       setIsRefreshing(false);
@@ -64,7 +72,7 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 20 });
   }, []);
 
   const onNext = () => {
@@ -78,7 +86,7 @@ export default function Trending() {
   };
   const onRefresh = () => {
     setIsRefreshing(true);
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 20 });
   };
 
   const onUpdateBlogs = (data: Blog, position: number) => {
@@ -89,10 +97,25 @@ export default function Trending() {
       data: newsData,
     } as any);
   };
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onSnapItem = (index: number) => {
+    setActiveIndex(index);
+    const pagination =
+      (dataLoadMore as any)?.pagination ?? (dataBlog as any)?.pagination;
+
+    const isNextPage =
+      pagination?.current_page * pagination?.take - 10 <= index;
+    if (isNextPage && !loadingMore) {
+      onNext();
+    }
+  };
 
   return (
     <ThemedView style={styles.container}>
-      {countUnS > 0 && <ViewUnread handleRefresh={onRefresh} />}
+      {countUnS > 0 && showCountUs && (
+        <ViewUnread handleRefresh={onRefresh} refList={refFlatList} />
+      )}
       {isRefreshing && <ActivityIndicator color={"white"} />}
       {(firstLoading || loadingBlog) && (
         <ParallaxScrollView>
@@ -101,9 +124,11 @@ export default function Trending() {
         </ParallaxScrollView>
       )}
       {!loadingBlog && (
-        <Animated.FlatList
+        <Carousel
+          vertical
+          ref={refFlatList}
           data={formatData}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index }: any) => {
             return (
               <CardDiscover
                 blog={item}
@@ -113,21 +138,21 @@ export default function Trending() {
               />
             );
           }}
-          refreshing={isRefreshing}
-          keyExtractor={(item: Blog) => item.id}
-          snapToAlignment="start"
-          decelerationRate={"fast"}
-          snapToInterval={heightScreen - 284}
-          onEndReachedThreshold={2}
-          onEndReached={() => onNext()}
+          itemHeight={heightScreen - 284}
+          sliderHeight={heightScreen - 300}
+          inactiveSlideOpacity={0.2}
+          callbackOffsetMargin={0}
+          enableSnap
+          activeSlideAlignment="center"
+          inactiveSlideShift={activeIndex}
+          onSnapToItem={onSnapItem}
+          onScrollIndexChanged={() => Haptics.selectionAsync()}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={() => onRefresh()}
             />
           }
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
         />
       )}
       {loadingMore && <ActivityIndicator color={"white"} />}

@@ -41,7 +41,7 @@ const Main = ({
         ]}
       >
         <ThemedText type="font-heading-xl" color="text-primary">
-          {blog?.title || question}
+          {blog?.title || question || ""}
         </ThemedText>
       </View>
       {blog && !hiddenAction ? (

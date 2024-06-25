@@ -5,18 +5,16 @@ import { ThemedView } from "@/src/components/ThemedView";
 import { Blog } from "@/src/utils/blog.utils";
 import { useRequest } from "ahooks";
 import { uniqBy } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  RefreshControl,
-  StyleSheet,
-} from "react-native";
-import Animated from "react-native-reanimated";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+import Carousel from "react-native-snap-carousel";
 import { getBlogFollowings } from "../Trending/serivce";
+import * as Haptics from "expo-haptics";
+import { RefreshControl } from "react-native-gesture-handler";
 const heightScreen = Dimensions.get("window").height;
 
-export default function Trending() {
+export default function ForYou() {
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {
     data: dataBlog,
@@ -58,7 +56,7 @@ export default function Trending() {
   }, [dataBlog]);
 
   useEffect(() => {
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 20 });
   }, []);
 
   const onNext = () => {
@@ -72,7 +70,7 @@ export default function Trending() {
   };
   const onRefresh = () => {
     setIsRefreshing(true);
-    run({ page: 1, take: 10 });
+    run({ page: 1, take: 20 });
   };
 
   const onUpdateBlogs = (data: Blog, position: number) => {
@@ -83,6 +81,18 @@ export default function Trending() {
       data: newsData,
     } as any);
   };
+
+  const onSnapItem = (index: number) => {
+    setActiveIndex(index);
+    const pagination =
+      (dataLoadMore as any)?.pagination ?? (dataBlog as any)?.pagination;
+    const isNextPage =
+      pagination?.current_page * pagination?.take - 10 === index;
+    if (isNextPage && !loadingMore) {
+      onNext();
+    }
+  };
+
   return (
     <ThemedView style={styles.container}>
       {isRefreshing && <ActivityIndicator color={"white"} />}
@@ -93,9 +103,10 @@ export default function Trending() {
         </ParallaxScrollView>
       )}
       {!loadingBlog && (
-        <Animated.FlatList
+        <Carousel
+          vertical
           data={formatData}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index }: any) => {
             return (
               <CardDiscover
                 blog={item}
@@ -105,22 +116,50 @@ export default function Trending() {
               />
             );
           }}
-          refreshing={isRefreshing}
-          keyExtractor={(item: Blog) => `${item.id}-for-you`}
-          snapToAlignment="start"
-          decelerationRate={"fast"}
-          snapToInterval={heightScreen - 284}
-          onEndReachedThreshold={2}
-          onEndReached={() => onNext()}
+          itemHeight={heightScreen - 284}
+          sliderHeight={heightScreen - 300}
+          inactiveSlideOpacity={0.2}
+          callbackOffsetMargin={0}
+          enableSnap
+          activeSlideAlignment="start"
+          inactiveSlideShift={activeIndex}
+          onSnapToItem={onSnapItem}
+          onScrollIndexChanged={() => Haptics.selectionAsync()}
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={() => onRefresh()}
             />
           }
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
         />
+        // <Animated.FlatList
+        //   data={formatData}
+        //   renderItem={({ item, index }) => {
+        //     return (
+        //       <CardDiscover
+        //         blog={item}
+        //         key={item.id + index + "for-you-card"}
+        //         position={index}
+        //         updateBlog={onUpdateBlogs}
+        //       />
+        //     );
+        //   }}
+        //   refreshing={isRefreshing}
+        //   keyExtractor={(item: Blog) => `${item.id}-for-you`}
+        //   snapToAlignment="start"
+        //   decelerationRate={"fast"}
+        //   snapToInterval={heightScreen - 284}
+        //   onEndReachedThreshold={2}
+        //   onEndReached={() => onNext()}
+        //   refreshControl={
+        //     <RefreshControl
+        //       refreshing={isRefreshing}
+        //       onRefresh={() => onRefresh()}
+        //     />
+        //   }
+        //   showsHorizontalScrollIndicator={false}
+        //   showsVerticalScrollIndicator={false}
+        // />
       )}
 
       {loadingMore && <ActivityIndicator color={"white"} />}

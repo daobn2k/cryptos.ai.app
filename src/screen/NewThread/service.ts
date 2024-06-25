@@ -2,6 +2,7 @@ import { useCustomAsyncStorage } from "@/src/hooks/useAsyncStorage";
 import { Lang } from "@/src/hooks/useLanguage";
 import { API_PATH } from "@/src/request/api.request";
 import request, { apiUrl } from "@/src/request/request";
+//@ts-ignore
 import "react-native-polyfill-globals/auto";
 //@ts-ignore
 import { fetch } from "react-native-fetch-api";

@@ -5,30 +5,40 @@ import { ISource } from ".";
 import { Skeleton } from "moti/skeleton";
 
 export const GroupAvatar: React.FC<ISource> = ({ data, loading }) => {
-  const urls = useMemo(() => {
-    return data?.filter((e) => e.url);
+  const { urls = [], length = 0 } = useMemo(() => {
+    return {
+      length: data?.length - 4,
+      urls: data?.filter((e) => e.url)?.slice(0, 4),
+    };
   }, [data]);
 
   if (urls?.length <= 0 && !loading) return <></>;
   return (
     <View style={styles.list}>
       {!loading && data?.length > 0 ? (
-        data.map((e, key) => {
-          return (
-            <View
-              style={[styles.item, { marginLeft: -1 * key + 1 }]}
-              key={key + "group--avatar"}
-            >
-              <Image
-                source={{
-                  uri: e.url,
-                }}
-                style={styles.avatar}
-              />
-              <View style={styles.stroke} />
-            </View>
-          );
-        })
+        <>
+          {urls?.map((e, key) => {
+            return (
+              <View
+                style={[styles.item, { marginLeft: -1 * key + 1 }]}
+                key={key + "group--avatar"}
+              >
+                <Image
+                  source={{
+                    uri: e.url,
+                  }}
+                  style={styles.avatar}
+                />
+                <View style={styles.stroke} />
+              </View>
+            );
+          })}
+          {length > 0 && (
+            <ThemedText type="font-12-500" style={{ marginLeft: 8 }}>
+              +{length}
+            </ThemedText>
+          )}
+        </>
       ) : (
         <></>
       )}
@@ -46,6 +56,8 @@ export const GroupAvatar: React.FC<ISource> = ({ data, loading }) => {
 const styles = StyleSheet.create({
   list: {
     flexDirection: "row",
+    alignItems: "center",
+    marginRight: 8,
   },
   item: {
     justifyContent: "center",
